@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Non Trouvée - FitCoach Pro</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            background-color: #121212;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(20,20,20,0.95)), url('https://images.unsplash.com/photo-1517963879466-e1b54ebd512d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .error-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .error-card {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .error-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color, #ccff00), var(--secondary-color, #ff4400));
+        }
+
+        .error-code {
+            font-family: 'Oswald', sans-serif;
+            font-size: 8rem;
+            font-weight: 700;
+            line-height: 1;
+            background: linear-gradient(45deg, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .error-code::after {
+            content: '404';
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: blur(10px);
+            opacity: 0.5;
+        }
+
+        .error-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .error-message {
+            color: #ccc;
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            padding: 15px 30px;
+            background: var(--primary-color, #ccff00);
+            color: black;
+            text-decoration: none;
+            font-family: 'Oswald', sans-serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-home:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(204, 255, 0, 0.3);
+            background: white;
+        }
+
+        .btn-home i {
+            margin-right: 10px;
+        }
+
+        /* Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating-icon {
+            font-size: 3rem;
+            color: var(--secondary-color, #ff4400);
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation (Simplified) -->
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-dumbbell"></i> FitCoach<span class="highlight">Pro</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="error-container">
+        <div class="error-card">
+            <div class="floating-icon">
+                <i class="fa-solid fa-person-falling-burst"></i>
+            </div>
+            <div class="error-code">404</div>
+            <h1 class="error-title">FAUX DÉPART !</h1>
+            <p class="error-message">
+                Oups ! Il semblerait que vous ayez quitté le terrain d'entraînement.<br>
+                Cette page n'existe pas ou a été déplacée.
+            </p>
+            
+            <a href="index.html" id="back-btn" class="btn-home">
+                <i class="fa-solid fa-arrow-left"></i> Retour à l'accueil
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p>&copy; 2023 FitCoach Pro. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Supabase Logic -->
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const btn = document.getElementById('back-btn');
+            
+            try {
+                // Vérification de la session pour rediriger intelligemment
+                const { data: { session } } = await supabase.auth.getSession();
+
+                if (session) {
+                    // Utilisateur connecté -> Dashboard
+                    btn.href = 'dashboard.html';
+                    btn.innerHTML = '<i class="fa-solid fa-gauge-high"></i> Retour au Dashboard';
+                } else {
+                    // Visiteur -> Accueil
+                    btn.href = 'index.html';
+                    btn.innerHTML = '<i class="fa-solid fa-house"></i> Retour à l\'accueil';
+                }
+            } catch (error) {
+                console.error('Erreur session:', error);
+                // Fallback par défaut vers index.html déjà défini dans le HTML
+            }
+        });
+    </script>
+</body>
+</html>

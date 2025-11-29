@@ -1,0 +1,62 @@
+[
+  {
+    "title": "Perte de Poids Express",
+    "description": "Un programme intensif de 8 semaines combinant cardio et renforcement musculaire en circuit pour maximiser la dépense calorique et brûler les graisses rapidement. Idéal pour débuter votre transformation.",
+    "level": "beginner",
+    "goal": "weight_loss",
+    "duration_weeks": 8,
+    "price": 0,
+    "image_url": "https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "is_active": true
+  },
+  {
+    "title": "Hypertrophie Totale",
+    "description": "Programme de musculation classique en Split (Pectoraux/Dos/Jambes/Épaules) conçu pour stimuler la croissance musculaire. Volume élevé et intensité modérée pour sculpter votre physique.",
+    "level": "intermediate",
+    "goal": "muscle",
+    "duration_weeks": 12,
+    "price": 29.99,
+    "image_url": "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "is_active": true
+  },
+  {
+    "title": "Powerlifting Elite",
+    "description": "Focalisez-vous sur la force pure avec ce programme axé sur les trois mouvements de base : Squat, Bench Press et Deadlift. Cycles de force périodisés pour athlètes expérimentés.",
+    "level": "advanced",
+    "goal": "muscle",
+    "duration_weeks": 10,
+    "price": 49.99,
+    "image_url": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "is_active": true
+  },
+  {
+    "title": "Flexibilité & Zen",
+    "description": "Améliorez votre mobilité articulaire, réduisez le stress et corrigez votre posture grâce à ce mélange de Yoga Vinyasa et d'étirements dynamiques. Parfait pour la récupération active.",
+    "level": "beginner",
+    "goal": "flexibility",
+    "duration_weeks": 4,
+    "price": 19.99,
+    "image_url": "https://images.unsplash.com/photo-1544367563-12123d8965cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "is_active": true
+  },
+  {
+    "title": "HIIT Burner 30",
+    "description": "Pas de temps ? Pas d'excuses. Des séances de 30 minutes à haute intensité (Tabata, EMOM) pour booster votre métabolisme et améliorer votre endurance cardiovasculaire.",
+    "level": "intermediate",
+    "goal": "cardio",
+    "duration_weeks": 6,
+    "price": 0,
+    "image_url": "https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "is_active": true
+  },
+  {
+    "title": "Athlète Hybride",
+    "description": "Le meilleur des deux mondes : force et endurance. Préparez-vous pour des courses d'obstacles ou améliorez votre condition physique générale avec ce programme complet.",
+    "level": "advanced",
+    "goal": "cardio",
+    "duration_weeks": 12,
+    "price": 39.99,
+    "image_url": "https://images.unsplash.com/photo-1517963879466-e1b54ebd512d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "is_active": true
+  }
+]

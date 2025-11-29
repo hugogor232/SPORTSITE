@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nos Coachs - FitCoach Pro</title>
+    <meta name="description" content="Découvrez nos coachs sportifs experts. Des profils variés pour tous les objectifs : musculation, cardio, yoga, crossfit.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* Styles spécifiques pour la page coachs si non présents dans style.css global */
+        .page-header {
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(20,20,20,0.8)), url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .coaches-container {
+            padding: 80px 0;
+            background-color: var(--bg-dark, #121212);
+            min-height: 60vh;
+        }
+
+        .coach-grid-dynamic {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .coach-card-full {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .coach-card-full:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+            border-color: var(--primary-color, #ccff00);
+        }
+
+        .coach-avatar-large {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            object-position: top;
+        }
+
+        .coach-details {
+            padding: 1.5rem;
+        }
+
+        .coach-role-badge {
+            background: var(--primary-color, #ccff00);
+            color: var(--bg-dark, #000);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .coach-name {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .coach-bio {
+            color: #ccc;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .loader-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+            width: 100%;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255,255,255,0.1);
+            border-top: 5px solid var(--primary-color, #ccff00);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-dumbbell"></i> FitCoach<span class="highlight">Pro</span>
+            </a>
+            
+            <button class="burger-menu" id="burger-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Accueil</a>
+                <a href="index.html#features">Fonctionnalités</a>
+                <a href="coaches.html" class="active">Coachs</a>
+                <a href="pricing.html">Tarifs</a>
+                <a href="login.html" id="auth-action-btn" class="btn-primary">Connexion</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="page-header">
+        <div class="container">
+            <h1 class="animate-up">NOS COACHS <span class="text-gradient">EXPERTS</span></h1>
+            <p class="animate-up delay-1">Une équipe d'élite dédiée à votre performance et votre transformation.</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <section class="coaches-container">
+        <div class="container">
+            <!-- Filtres (Optionnel pour future implémentation) -->
+            <div class="filters-wrapper" style="margin-bottom: 2rem; display: none;">
+                <!-- Placeholder pour filtres JS -->
+            </div>
+
+            <!-- Grid des coachs -->
+            <div id="coaches-grid" class="coach-grid-dynamic">
+                <!-- Loading State -->
+                <div class="loader-container">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <!-- Empty State (Hidden by default) -->
+            <div id="empty-state" class="text-center" style="display: none; padding: 3rem;">
+                <i class="fa-solid fa-user-slash fa-3x" style="color: #666; margin-bottom: 1rem;"></i>
+                <h3 style="color: white;">Aucun coach disponible pour le moment.</h3>
+                <p style="color: #999;">Revenez bientôt pour découvrir nos nouveaux experts.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section bg-dark-gradient section-padding">
+        <div class="container text-center">
+            <h2>VOUS ÊTES COACH ?</h2>
+            <p>Rejoignez l'équipe FitCoach Pro et développez votre clientèle.</p>
+            <a href="contact.html" class="btn-secondary btn-lg">POSTULER MAINTENANT</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>FitCoach<span class="highlight">Pro</span></h3>
+                <p>La plateforme ultime pour votre transformation physique.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="coaches.html">Coachs</a></li>
+                    <li><a href="pricing.html">Tarifs</a></li>
+                    <li><a href="login.html">Connexion</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Légal</h4>
+                <ul>
+                    <li><a href="#">CGU</a></li>
+                    <li><a href="#">Confidentialité</a></li>
+                    <li><a href="#">Mentions Légales</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom text-center">
+            <p>&copy; 2023 FitCoach Pro. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts UI -->
+    <script src="script.js"></script>
+
+    <!-- Supabase Logic -->
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+
+        // Éléments du DOM
+        const coachesGrid = document.getElementById('coaches-grid');
+        const emptyState = document.getElementById('empty-state');
+        const authBtn = document.getElementById('auth-action-btn');
+
+        // Gestion de l'état de connexion pour la nav
+        async function updateAuthButton() {
+            const { data: { session } } = await supabase.auth.getSession();
+            
+            if (session) {
+                authBtn.textContent = 'Mon Dashboard';
+                authBtn.href = 'dashboard.html';
+                authBtn.classList.remove('btn-primary');
+                authBtn.classList.add('btn-secondary');
+            } else {
+                authBtn.textContent = 'Connexion';
+                authBtn.href = 'login.html';
+                authBtn.classList.remove('btn-secondary');
+                authBtn.classList.add('btn-primary');
+            }
+        }
+
+        // Récupération des coachs
+        async function fetchCoaches() {
+            try {
+                // Requête Supabase : récupérer les profils avec le rôle 'coach'
+                // On suppose que la table 'profiles' contient : id, name, avatar_url, bio, specialty, role
+                const { data: coaches, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('role', 'coach')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                renderCoaches(coaches);
+
+            } catch (error) {
+                console.error('Erreur lors du chargement des coachs:', error);
+                coachesGrid.innerHTML = `
+                    <div class="text-center" style="grid-column: 1/-1; color: #ff4444;">
+                        <p>Impossible de charger les profils. Veuillez réessayer plus tard.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Affichage des coachs
+        function renderCoaches(coaches) {
+            coachesGrid.innerHTML = ''; // Nettoyer le loader
+
+            if (!coaches || coaches.length === 0) {
+                coachesGrid.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            coaches.forEach(coach => {
+                // Valeurs par défaut si données manquantes
+                const name = coach.name || coach.full_name || 'Coach FitCoach';
+                const specialty = coach.specialty || 'Coach Sportif';
+                const bio = coach.bio || "Passionné de sport et de nutrition, je vous accompagne dans l'atteinte de vos objectifs avec des programmes sur mesure.";
+                
+                // Gestion de l'image (placeholder si null)
+                let avatarUrl = coach.avatar_url;
+                if (!avatarUrl) {
+                    // Placeholder générique sportif
+                    avatarUrl = 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+                }
+
+                // Création de la carte HTML
+                const card = document.createElement('div');
+                card.className = 'coach-card-full';
+                card.innerHTML = `
+                    <img src="${avatarUrl}" alt="${name}" class="coach-avatar-large" loading="lazy">
+                    <div class="coach-details">
+                        <span class="coach-role-badge">${specialty}</span>
+                        <h3 class="coach-name">${name}</h3>
+                        <p class="coach-bio">${bio}</p>
+                        <a href="register.html?coach=${coach.id}" class="btn-primary btn-sm w-100">
+                            CHOISIR CE COACH <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                `;
+                
+                coachesGrid.appendChild(card);
+            });
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAuthButton();
+            fetchCoaches();
+        });
+
+        // Écouteur de changement de session (pour mise à jour dynamique du bouton nav)
+        supabase.auth.onAuthStateChange((event, session) => {
+            updateAuthButton();
+        });
+
+    </script>
+</body>
+</html>

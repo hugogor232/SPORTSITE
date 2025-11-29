@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Programme - FitCoach Pro</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            background-color: #121212;
+            padding-top: 80px;
+            min-height: 100vh;
+        }
+
+        .program-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header Section */
+        .program-header {
+            background: linear-gradient(135deg, #1a1a1a, #222);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .program-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(204, 255, 0, 0.05));
+            transform: skewX(-20deg);
+        }
+
+        .program-title {
+            font-family: 'Oswald', sans-serif;
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .program-meta {
+            color: #888;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .program-meta span i {
+            color: var(--primary-color, #ccff00);
+            margin-right: 5px;
+        }
+
+        /* Progress Bar */
+        .progress-wrapper {
+            margin-top: 1rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            color: #ccc;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color, #ccff00);
+            width: 0%;
+            transition: width 1s ease-in-out;
+            box-shadow: 0 0 10px rgba(204, 255, 0, 0.5);
+        }
+
+        /* Week Selector */
+        .week-selector {
+            display: flex;
+            overflow-x: auto;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) #1a1a1a;
+        }
+
+        .week-btn {
+            background: #1a1a1a;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #888;
+            padding: 10px 20px;
+            border-radius: 50px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .week-btn:hover {
+            border-color: white;
+            color: white;
+        }
+
+        .week-btn.active {
+            background: var(--primary-color, #ccff00);
+            color: black;
+            border-color: var(--primary-color, #ccff00);
+            font-weight: bold;
+        }
+
+        /* Workouts Grid */
+        .workouts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .workout-card {
+            background: #1a1a1a;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .workout-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color, #ccff00);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+
+        .workout-card.completed {
+            border-color: #00ff88;
+            opacity: 0.8;
+        }
+
+        .workout-card.completed::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #00ff88;
+            color: black;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .workout-img {
+            height: 160px;
+            width: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+        }
+
+        .workout-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .workout-day {
+            color: var(--primary-color, #ccff00);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .workout-title {
+            color: white;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .workout-stats {
+            display: flex;
+            justify-content: space-between;
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-action {
+            margin-top: auto;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .btn-start {
+            background: white;
+            color: black;
+        }
+
+        .btn-start:hover {
+            background: var(--primary-color, #ccff00);
+        }
+
+        .btn-complete {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .btn-complete:hover {
+            background: #00ff88;
+            color: black;
+            border-color: #00ff88;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: #1a1a1a;
+            border-radius: 20px;
+            border: 1px dashed rgba(255,255,255,0.2);
+        }
+
+        .empty-state i {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 4rem;
+            color: var(--primary-color);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem;
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .exercise-list-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: #ccc;
+        }
+        
+        .exercise-list-item:last-child { border-bottom: none; }
+
+        .exercise-reps {
+            margin-left: auto;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-dumbbell"></i> FitCoach<span class="highlight">Pro</span>
+            </a>
+            
+            <button class="burger-menu" id="burger-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-links" id="nav-links">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="my-program.html" class="active">Mon Programme</a>
+                <a href="stats.html">Statistiques</a>
+                <a href="chat.html">Coach Chat</a>
+                <a href="#" id="logout-btn" class="btn-primary">Déconnexion</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="program-container">
+        
+        <!-- Loading State -->
+        <div id="loader" class="loader">
+            <i class="fa-solid fa-circle-notch fa-spin fa-3x"></i>
+            <p style="margin-top: 1rem; color: white;">Chargement de votre programme...</p>
+        </div>
+
+        <!-- Content (Hidden initially) -->
+        <div id="program-content" style="display: none;">
+            
+            <!-- Header -->
+            <header class="program-header">
+                <h1 id="program-title" class="program-title">TITRE DU PROGRAMME</h1>
+                <div class="program-meta">
+                    <span id="program-duration"><i class="fa-regular fa-clock"></i> 8 Semaines</span>
+                    <span id="program-level"><i class="fa-solid fa-layer-group"></i> Intermédiaire</span>
+                </div>
+                
+                <div class="progress-wrapper">
+                    <div class="progress-label">
+                        <span>Progression globale</span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-track">
+                        <div id="progress-bar" class="progress-fill"></div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Week Selector -->
+            <div id="week-selector" class="week-selector">
+                <!-- Generated by JS -->
+            </div>
+
+            <!-- Workouts Grid -->
+            <div id="workouts-grid" class="workouts-grid">
+                <!-- Generated by JS -->
+            </div>
+
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="empty-state" style="display: none;">
+            <i class="fa-solid fa-person-running fa-4x"></i>
+            <h2 style="color: white; margin-top: 1rem;">Aucun programme actif</h2>
+            <p style="color: #888; margin-bottom: 2rem;">Vous n'avez pas encore sélectionné de programme d'entraînement.</p>
+            <a href="programs.html" class="btn-primary">PARCOURIR LE CATALOGUE</a>
+        </div>
+
+    </div>
+
+    <!-- Workout Details Modal -->
+    <div id="workout-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title" style="color:white; font-family:'Oswald'; margin-bottom:1rem;">Détails</h2>
+            <p id="modal-desc" style="color:#ccc; margin-bottom:1.5rem;"></p>
+            
+            <h4 style="color:var(--primary-color); margin-bottom:1rem;">EXERCICES</h4>
+            <div id="modal-exercises">
+                <!-- List -->
+            </div>
+            
+            <div style="margin-top: 2rem; text-align: center;">
+                <button id="modal-action-btn" class="btn-primary w-100">MARQUER COMME TERMINÉ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+
+    <!-- Supabase Logic -->
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+
+        // State
+        let currentProgram = null;
+        let userProgramId = null;
+        let allWorkouts = [];
+        let completedWorkouts = new Set();
+        let currentWeek = 1;
+        let totalWeeks = 0;
+
+        // Elements
+        const loader = document.getElementById('loader');
+        const content = document.getElementById('program-content');
+        const emptyState = document.getElementById('empty-state');
+        const grid = document.getElementById('workouts-grid');
+        const weekSelector = document.getElementById('week-selector');
+
+        // Init
+        document.addEventListener('DOMContentLoaded', async () => {
+            const session = await checkSession();
+            if (session) {
+                await fetchActiveProgram(session.user.id);
+            }
+            
+            // Logout handler
+            document.getElementById('logout-btn').addEventListener('click', async (e) => {
+                e.preventDefault();
+                await supabase.auth.signOut();
+                window.location.href = 'index.html';
+            });
+        });
+
+        // Auth Check
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return null;
+            }
+            return session;
+        }
+
+        // Fetch Data
+        async function fetchActiveProgram(userId) {
+            try {
+                // 1. Get active user_program linked with program details
+                const { data: userPrograms, error: upError } = await supabase
+                    .from('user_programs')
+                    .select(`
+                        id,
+                        status,
+                        programs (
+                            id, title, duration_weeks, level, description
+                        )
+                    `)
+                    .eq('user_id', userId)
+                    .eq('status', 'active')
+                    .single();
+
+                if (upError || !userPrograms) {
+                    showEmptyState();
+                    return;
+                }
+
+                currentProgram = userPrograms.programs;
+                userProgramId = userPrograms.id;
+                totalWeeks = currentProgram.duration_weeks;
+
+                // Update Header
+                document.getElementById('program-title').textContent = currentProgram.title;
+                document.getElementById('program-duration').innerHTML = `<i class="fa-regular fa-clock"></i> ${totalWeeks} Semaines`;
+                document.getElementById('program-level').innerHTML = `<i class="fa-solid fa-layer-group"></i> ${currentProgram.level || 'Tous niveaux'}`;
+
+                // 2. Get Workouts
+                const { data: workouts, error: wError } = await supabase
+                    .from('workouts')
+                    .select('*')
+                    .eq('program_id', currentProgram.id)
+                    .order('day_number', { ascending: true });
+
+                if (wError) throw wError;
+                allWorkouts = workouts;
+
+                // 3. Get Logs (Completed workouts)
+                const { data: logs, error: lError } = await supabase
+                    .from('workout_logs')
+                    .select('workout_id')
+                    .eq('user_program_id', userProgramId);
+
+                if (lError) throw lError;
+                
+                logs.forEach(log => completedWorkouts.add(log.workout_id));
+
+                // Update Progress Bar
+                updateProgressBar();
+
+                // Render UI
+                renderWeeks();
+                renderWorkouts(1); // Default to week 1
+
+                loader.style.display = 'none';
+                content.style.display = 'block';
+
+            } catch (error) {
+                console.error('Error fetching program:', error);
+                showEmptyState(); // Fallback
+            }
+        }
+
+        function showEmptyState() {
+            loader.style.display = 'none';
+            emptyState.style.display = 'block';
+        }
+
+        function updateProgressBar() {
+            const total = allWorkouts.length;
+            const completed = completedWorkouts.size;
+            const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
+            
+            document.getElementById('progress-percent').textContent = `${percent}%`;
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+        }
+
+        // Render Weeks Tabs
+        function renderWeeks() {
+            weekSelector.innerHTML = '';
+            for (let i = 1; i <= totalWeeks; i++) {
+                const btn = document.createElement('button');
+                btn.className = `week-btn ${i === 1 ? 'active' : ''}`;
+                btn.textContent = `SEMAINE ${i}`;
+                btn.onclick = () => {
+                    document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderWorkouts(i);
+                };
+                weekSelector.appendChild(btn);
+            }
+        }
+
+        // Render Workouts Cards
+        function renderWorkouts(week) {
+            currentWeek = week;
+            grid.innerHTML = '';
+            
+            const weekWorkouts = allWorkouts.filter(w => w.week_number === week);
+
+            if (weekWorkouts.length === 0) {
+                grid.innerHTML = '<p style="color:#888; grid-column:1/-1; text-align:center;">Aucune séance prévue pour cette semaine.</p>';
+                return;
+            }
+
+            weekWorkouts.forEach(workout => {
+                const isCompleted = completedWorkouts.has(workout.id);
+                const card = document.createElement('div');
+                card.className = `workout-card ${isCompleted ? 'completed' : ''}`;
+                
+                // Image placeholder logic
+                const imgUrl = workout.image_url || 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';
+
+                card.innerHTML = `
+                    <img src="${imgUrl}" class="workout-img" alt="${workout.title}">
+                    <div class="workout-body">
+                        <div class="workout-day">JOUR ${workout.day_number}</div>
+                        <h3 class="workout-title">${workout.title}</h3>
+                        <div class="workout-stats">
+                            <span><i class="fa-regular fa-clock"></i> ${workout.duration_minutes} min</span>
+                            <span><i class="fa-solid fa-fire"></i> ${workout.calories_burn || 300} kcal</span>
+                        </div>
+                        ${isCompleted 
+                            ? `<button class="btn-action btn-complete" disabled>TERMINÉ</button>`
+                            : `<button class="btn-action btn-start" onclick="openWorkoutModal('${workout.id}')">VOIR DÉTAILS</button>`
+                        }
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Modal Logic
+        window.openWorkoutModal = (workoutId) => {
+            const workout = allWorkouts.find(w => w.id === workoutId);
+            if (!workout) return;
+
+            document.getElementById('modal-title').textContent = workout.title;
+            document.getElementById('modal-desc').textContent = workout.description || "Suivez les instructions pour chaque exercice.";
+            
+            // Mock Exercises (In real app, fetch from 'exercises' table)
+            const exercisesList = document.getElementById('modal-exercises');
+            exercisesList.innerHTML = `
+                <div class="exercise-list-item"><span>Échauffement articulaire</span><span class="exercise-reps">5 min</span></div>
+                <div class="exercise-list-item"><span>Exercice Principal A</span><span class="exercise-reps">4 x 12</span></div>
+                <div class="exercise-list-item"><span>Exercice Principal B</span><span class="exercise-reps">3 x 15</span></div>
+                <div class="exercise-list-item"><span>Retour au calme</span><span class="exercise-reps">5 min</span></div>
+            `;
+
+            const actionBtn = document.getElementById('modal-action-btn');
+            actionBtn.onclick = () => markAsComplete(workoutId);
+            actionBtn.textContent = "MARQUER COMME TERMINÉ";
+
+            document.getElementById('workout-modal').style.display = 'flex';
+        };
+
+        window.closeModal = () => {
+            document.getElementById('workout-modal').style.display = 'none';
+        };
+
+        window.markAsComplete = async (workoutId) => {
+            try {
+                const actionBtn = document.getElementById('modal-action-btn');
+                actionBtn.textContent = "ENREGISTREMENT...";
+                actionBtn.disabled = true;
+
+                // Insert into DB
+                const { error } = await supabase
+                    .from('workout_logs')
+                    .insert([{
+                        user_program_id: userProgramId,
+                        workout_id: workoutId,
+                        completed_at: new Date().toISOString()
+                    }]);
+
+                if (error) throw error;
+
+                // Update Local State
+                completedWorkouts.add(workoutId);
+                updateProgressBar();
+                renderWorkouts(currentWeek);
+                closeModal();
+
+            } catch (error) {
+                console.error('Error logging workout:', error);
+                alert("Erreur lors de l'enregistrement. Veuillez réessayer.");
+            }
+        };
+
+        // Close modal on outside click
+        window.onclick = (event) => {
+            const modal = document.getElementById('workout-modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+
+        // Expose functions to window for onclick handlers
+        window.openWorkoutModal = window.openWorkoutModal;
+        window.closeModal = window.closeModal;
+        window.markAsComplete = window.markAsComplete;
+
+    </script>
+</body>
+</html>

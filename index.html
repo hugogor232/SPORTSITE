@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil - FitCoach Pro</title>
+    <meta name="description" content="Plateforme de coaching sportif personnalisé. Atteignez vos objectifs avec nos coachs experts et notre suivi en temps réel.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-dumbbell"></i> FitCoach<span class="highlight">Pro</span>
+            </a>
+            
+            <button class="burger-menu" id="burger-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-links" id="nav-links">
+                <a href="#features">Fonctionnalités</a>
+                <a href="#coaches">Coachs</a>
+                <a href="#testimonials">Témoignages</a>
+                <a href="pricing.html">Tarifs</a>
+                <!-- Le bouton changera dynamiquement via JS -->
+                <a href="login.html" id="auth-action-btn" class="btn-primary">Connexion</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <h1 class="animate-up">DÉPASSEZ VOS <span class="text-gradient">LIMITES</span></h1>
+            <p class="animate-up delay-1">Le coaching sportif nouvelle génération. Programmes personnalisés, suivi nutritionnel et progression en temps réel.</p>
+            <div class="hero-buttons animate-up delay-2">
+                <a href="register.html" class="btn-primary btn-lg pulse">COMMENCER GRATUITEMENT</a>
+                <a href="#features" class="btn-secondary btn-lg">DÉCOUVRIR</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats Section -->
+    <section class="stats-bar">
+        <div class="container stats-grid">
+            <div class="stat-item">
+                <span class="stat-number" data-target="5000">0</span>+
+                <span class="stat-label">Athlètes</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-target="50">0</span>+
+                <span class="stat-label">Coachs Experts</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-target="98">0</span>%
+                <span class="stat-label">Objectifs Atteints</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Proposition -->
+    <section id="features" class="section-padding bg-dark">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>POURQUOI <span class="highlight">FITCOACH PRO</span> ?</h2>
+                <p>Une approche scientifique pour des résultats concrets.</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card glass">
+                    <div class="icon-box">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3>Programmes IA & Humain</h3>
+                    <p>L'alliance parfaite entre l'intelligence artificielle pour l'analyse de données et l'expertise humaine pour la motivation.</p>
+                </div>
+
+                <div class="feature-card glass">
+                    <div class="icon-box">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h3>Suivi Temps Réel</h3>
+                    <p>Visualisez votre progression avec des graphiques dynamiques. Loguez vos séances et recevez des feedbacks instantanés.</p>
+                </div>
+
+                <div class="feature-card glass">
+                    <div class="icon-box">
+                        <i class="fa-solid fa-utensils"></i>
+                    </div>
+                    <h3>Nutrition Adaptée</h3>
+                    <p>Plans alimentaires générés selon votre métabolisme et vos objectifs, ajustables à tout moment.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Coaches -->
+    <section id="coaches" class="section-padding">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>NOS COACHS <span class="highlight">VEDETTES</span></h2>
+                <p>Entraînez-vous avec l'élite.</p>
+            </div>
+
+            <div class="coaches-grid">
+                <!-- Coach 1 -->
+                <div class="coach-card">
+                    <div class="coach-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Coach Sarah">
+                        <div class="coach-overlay">
+                            <div class="coach-specialty">CrossFit & HIIT</div>
+                        </div>
+                    </div>
+                    <div class="coach-info">
+                        <h3>Sarah Connor</h3>
+                        <p>Spécialiste haute intensité. "Pas d'excuses, que des résultats."</p>
+                        <a href="register.html" class="btn-text">S'entraîner avec Sarah <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Coach 2 -->
+                <div class="coach-card">
+                    <div class="coach-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Coach Mike">
+                        <div class="coach-overlay">
+                            <div class="coach-specialty">Musculation & Force</div>
+                        </div>
+                    </div>
+                    <div class="coach-info">
+                        <h3>Mike Ross</h3>
+                        <p>Expert en hypertrophie et force athlétique. Ancien champion national.</p>
+                        <a href="register.html" class="btn-text">S'entraîner avec Mike <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Coach 3 -->
+                <div class="coach-card">
+                    <div class="coach-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Coach Elena">
+                        <div class="coach-overlay">
+                            <div class="coach-specialty">Yoga & Mobilité</div>
+                        </div>
+                    </div>
+                    <div class="coach-info">
+                        <h3>Elena Fisher</h3>
+                        <p>Améliorez votre souplesse et votre récupération pour durer dans le temps.</p>
+                        <a href="register.html" class="btn-text">S'entraîner avec Elena <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="section-padding bg-dark-gradient">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>ILS ONT <span class="highlight">CHANGÉ</span> LEUR VIE</h2>
+            </div>
+            
+            <div class="testimonials-slider">
+                <div class="testimonial-card glass">
+                    <div class="quote-icon"><i class="fa-solid fa-quote-left"></i></div>
+                    <p>"L'interface est incroyable. Je peux voir ma progression semaine après semaine. J'ai perdu 10kg en 3 mois !"</p>
+                    <div class="user-profile">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Utilisateur">
+                        <div>
+                            <h4>Thomas D.</h4>
+                            <span>Membre depuis 6 mois</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card glass">
+                    <div class="quote-icon"><i class="fa-solid fa-quote-left"></i></div>
+                    <p>"Avoir accès à mon coach via le chat intégré change tout. La motivation est toujours là."</p>
+                    <div class="user-profile">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Utilisateur">
+                        <div>
+                            <h4>Sophie M.</h4>
+                            <span>Membre depuis 1 an</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="cta-section">
+        <div class="container text-center">
+            <h2>PRÊT À PASSER AU NIVEAU SUPÉRIEUR ?</h2>
+            <p>Rejoignez FitCoach Pro aujourd'hui et bénéficiez de 7 jours d'essai gratuit.</p>
+            <a href="register.html" class="btn-primary btn-xl">JE M'INSCRIS MAINTENANT</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>FitCoach<span class="highlight">Pro</span></h3>
+                <p>La plateforme ultime pour votre transformation physique.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="#features">Fonctionnalités</a></li>
+                    <li><a href="pricing.html">Tarifs</a></li>
+                    <li><a href="login.html">Connexion</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Légal</h4>
+                <ul>
+                    <li><a href="#">CGU</a></li>
+                    <li><a href="#">Confidentialité</a></li>
+                    <li><a href="#">Mentions Légales</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom text-center">
+            <p>&copy; 2023 FitCoach Pro. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    
+    <!-- Supabase Logic -->
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+
+        // Logique "Intelligente" de la page d'accueil
+        async function initHomePage() {
+            try {
+                // Vérification de la session
+                const { data: { session } } = await supabase.auth.getSession();
+                
+                const authBtn = document.getElementById('auth-action-btn');
+                
+                if (session) {
+                    // Utilisateur connecté -> Dashboard
+                    console.log('Utilisateur connecté:', session.user.email);
+                    authBtn.textContent = 'Mon Dashboard';
+                    authBtn.href = 'dashboard.html';
+                    authBtn.classList.remove('btn-primary');
+                    authBtn.classList.add('btn-secondary'); // Style distinct pour le dashboard
+                    
+                    // Optionnel : Ajouter un bouton de déconnexion dans le menu si besoin
+                    // Mais pour la landing, rediriger vers le dashboard est la priorité
+                } else {
+                    // Utilisateur non connecté -> Connexion
+                    console.log('Visiteur non connecté');
+                    authBtn.textContent = 'Connexion';
+                    authBtn.href = 'login.html';
+                }
+
+                // Animation des compteurs si l'élément est visible (logique simplifiée ici)
+                const stats = document.querySelectorAll('.stat-number');
+                stats.forEach(stat => {
+                    const target = +stat.getAttribute('data-target');
+                    stat.innerText = target; // Fallback simple, l'animation complète serait dans script.js
+                });
+
+            } catch (error) {
+                console.error('Erreur initialisation home:', error);
+            }
+        }
+
+        // Écouter les changements d'état d'authentification
+        supabase.auth.onAuthStateChange((event, session) => {
+            const authBtn = document.getElementById('auth-action-btn');
+            if (session) {
+                authBtn.textContent = 'Mon Dashboard';
+                authBtn.href = 'dashboard.html';
+                authBtn.classList.add('btn-secondary');
+            } else {
+                authBtn.textContent = 'Connexion';
+                authBtn.href = 'login.html';
+                authBtn.classList.remove('btn-secondary');
+            }
+        });
+
+        // Lancer au chargement
+        document.addEventListener('DOMContentLoaded', initHomePage);
+    </script>
+</body>
+</html>

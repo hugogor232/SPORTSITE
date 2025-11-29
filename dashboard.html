@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Dashboard - FitCoach Pro</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Dashboard Specific Styles */
+        body {
+            background-color: #121212;
+            padding-top: 80px; /* Espace pour la nav fixe */
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+
+        /* Sidebar Navigation (Desktop) */
+        .dashboard-sidebar {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .user-mini-profile {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-color, #ccff00);
+            margin-bottom: 1rem;
+        }
+
+        .user-name {
+            color: white;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.2rem;
+        }
+
+        .user-plan {
+            color: #888;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: #ccc;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background: rgba(204, 255, 0, 0.1);
+            color: var(--primary-color, #ccff00);
+        }
+
+        .sidebar-nav a i {
+            width: 25px;
+            margin-right: 10px;
+        }
+
+        /* Main Content */
+        .dashboard-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .welcome-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-text h1 {
+            color: white;
+            font-family: 'Oswald', sans-serif;
+            margin-bottom: 0.5rem;
+        }
+
+        .date-display {
+            color: #888;
+        }
+
+        /* Stats Grid */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: #1a1a1a;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .icon-fire { background: rgba(255, 68, 0, 0.1); color: #ff4400; }
+        .icon-bolt { background: rgba(204, 255, 0, 0.1); color: #ccff00; }
+        .icon-check { background: rgba(0, 255, 136, 0.1); color: #00ff88; }
+
+        .stat-info h3 {
+            color: white;
+            font-size: 1.5rem;
+            font-family: 'Oswald', sans-serif;
+            margin: 0;
+        }
+
+        .stat-info p {
+            color: #888;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Next Workout Card */
+        .next-workout-card {
+            background: linear-gradient(135deg, #1a1a1a, #222);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .next-workout-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--primary-color);
+        }
+
+        .workout-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .workout-tag {
+            background: var(--primary-color);
+            color: black;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .workout-details {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            color: #ccc;
+        }
+
+        .workout-details span i {
+            color: var(--primary-color);
+            margin-right: 5px;
+        }
+
+        /* Charts & Activity */
+        .dashboard-grid-lower {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .chart-container {
+            background: #1a1a1a;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .notifications-panel {
+            background: #1a1a1a;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: start;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notif-icon {
+            min-width: 30px;
+            height: 30px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 0.8rem;
+            color: white;
+        }
+
+        .notif-content p {
+            color: #ccc;
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .notif-time {
+            color: #666;
+            font-size: 0.75rem;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 900px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            .dashboard-sidebar {
+                display: none; /* Utiliser le menu burger mobile à la place */
+            }
+            .dashboard-grid-lower {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation (Mobile/Global) -->
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-dumbbell"></i> FitCoach<span class="highlight">Pro</span>
+            </a>
+            
+            <button class="burger-menu" id="burger-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-links" id="nav-links">
+                <a href="dashboard.html" class="active">Dashboard</a>
+                <a href="program.html">Mon Programme</a>
+                <a href="stats.html">Statistiques</a>
+                <a href="chat.html">Coach Chat</a>
+                <a href="#" id="logout-btn-mobile" class="btn-primary">Déconnexion</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        
+        <!-- Sidebar (Desktop) -->
+        <aside class="dashboard-sidebar">
+            <div class="user-mini-profile">
+                <img src="https://via.placeholder.com/150" alt="Avatar" id="sidebar-avatar" class="user-avatar">
+                <h3 id="sidebar-name" class="user-name">Chargement...</h3>
+                <span id="sidebar-plan" class="user-plan">Membre Pro</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="active"><i class="fa-solid fa-house"></i> Vue d'ensemble</a>
+                <a href="program.html"><i class="fa-solid fa-dumbbell"></i> Mon Programme</a>
+                <a href="nutrition.html"><i class="fa-solid fa-utensils"></i> Nutrition</a>
+                <a href="stats.html"><i class="fa-solid fa-chart-line"></i> Progression</a>
+                <a href="chat.html"><i class="fa-solid fa-comments"></i> Messages <span class="badge" id="msg-badge"></span></a>
+                <a href="settings.html"><i class="fa-solid fa-gear"></i> Paramètres</a>
+                <a href="#" id="logout-btn-sidebar" style="margin-top: 2rem; color: #ff4444;"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            
+            <!-- Header -->
+            <div class="welcome-header">
+                <div class="welcome-text">
+                    <h1 id="welcome-msg">Bonjour, Athlète</h1>
+                    <p class="date-display" id="current-date">Lundi 12 Octobre 2023</p>
+                </div>
+                <div class="action-buttons">
+                    <a href="program.html" class="btn-primary"><i class="fa-solid fa-play"></i> Démarrer</a>
+                </div>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-icon icon-bolt">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="stat-workouts">0</h3>
+                        <p>Séances ce mois</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-fire">
+                        <i class="fa-solid fa-fire"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="stat-calories">0</h3>
+                        <p>Kcal brûlées</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-check">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="stat-streak">0</h3>
+                        <p>Jours de suite</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Workout -->
+            <div class="next-workout-card">
+                <div class="workout-header">
+                    <h2 style="color:white; margin:0; font-family:'Oswald', sans-serif;">PROCHAINE SÉANCE</h2>
+                    <span class="workout-tag" id="next-workout-type">FULL BODY</span>
+                </div>
+                <h3 id="next-workout-title" style="color:white; font-size:1.8rem; margin-bottom:1rem;">Hypertrophie A - Pectoraux & Dos</h3>
+                <div class="workout-details">
+                    <span><i class="fa-regular fa-clock"></i> <span id="next-workout-duration">60 min</span></span>
+                    <span><i class="fa-solid fa-layer-group"></i> <span id="next-workout-exercises">8 Exercices</span></span>
+                    <span><i class="fa-solid fa-signal"></i> <span id="next-workout-intensity">Intense</span></span>
+                </div>
+                <a href="program.html" class="btn-primary w-100">COMMENCER LA SÉANCE MAINTENANT</a>
+            </div>
+
+            <!-- Lower Grid -->
+            <div class="dashboard-grid-lower">
+                <!-- Chart -->
+                <div class="chart-container">
+                    <h3 style="color:white; margin-bottom:1rem; font-family:'Oswald', sans-serif;">ACTIVITÉ HEBDOMADAIRE</h3>
+                    <canvas id="activityChart"></canvas>
+                </div>
+
+                <!-- Notifications -->
+                <div class="notifications-panel">
+                    <h3 style="color:white; margin-bottom:1rem; font-family:'Oswald', sans-serif;">NOTIFICATIONS</h3>
+                    <div id="notifications-list">
+                        <div class="notification-item">
+                            <div class="notif-icon" style="background:rgba(204,255,0,0.2); color:#ccff00;">
+                                <i class="fa-solid fa-trophy"></i>
+                            </div>
+                            <div class="notif-content">
+                                <p>Nouveau record personnel au développé couché !</p>
+                                <span class="notif-time">Il y a 2h</span>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notif-icon">
+                                <i class="fa-solid fa-comment"></i>
+                            </div>
+                            <div class="notif-content">
+                                <p>Coach Sarah a commenté votre séance.</p>
+                                <span class="notif-time">Hier</span>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notif-icon">
+                                <i class="fa-solid fa-calendar"></i>
+                            </div>
+                            <div class="notif-content">
+                                <p>Votre programme a été mis à jour.</p>
+                                <span class="notif-time">Il y a 2 jours</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+
+    <!-- Supabase Logic -->
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+
+        // Protection de la page
+        async function protectPrivatePage() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+            }
+            return session;
+        }
+
+        // Chargement des données
+        async function loadDashboardData(session) {
+            const userId = session.user.id;
+            const userEmail = session.user.email;
+
+            // 1. Profil Utilisateur
+            try {
+                const { data: profile, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', userId)
+                    .single();
+
+                if (profile) {
+                    const name = profile.name || userEmail.split('@')[0];
+                    document.getElementById('welcome-msg').textContent = `Bonjour, ${name}`;
+                    document.getElementById('sidebar-name').textContent = name;
+                    document.getElementById('sidebar-plan').textContent = profile.subscription_plan ? `Membre ${profile.subscription_plan}` : 'Membre Starter';
+                    
+                    if (profile.avatar_url) {
+                        document.getElementById('sidebar-avatar').src = profile.avatar_url;
+                    } else {
+                        // Avatar par défaut basé sur le nom
+                        document.getElementById('sidebar-avatar').src = `https://ui-avatars.com/api/?name=${name}&background=ccff00&color=000`;
+                    }
+                }
+            } catch (err) {
+                console.error('Erreur chargement profil', err);
+            }
+
+            // 2. Stats (Mockées si pas de données réelles pour la démo)
+            // Dans un cas réel : count sur table 'workout_logs'
+            document.getElementById('stat-workouts').textContent = '12';
+            document.getElementById('stat-calories').textContent = '4,500';
+            document.getElementById('stat-streak').textContent = '3';
+
+            // 3. Date du jour
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = new Date().toLocaleDateString('fr-FR', options);
+        }
+
+        // Gestion Déconnexion
+        async function handleLogout() {
+            const { error } = await supabase.auth.signOut();
+            if (!error) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Initialisation Chart.js
+        function initChart() {
+            const ctx = document.getElementById('activityChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+                    datasets: [{
+                        label: 'Minutes',
+                        data: [45, 0, 60, 30, 0, 90, 0],
+                        backgroundColor: '#ccff00',
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: '#888' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#888' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Main Execution
+        document.addEventListener('DOMContentLoaded', async () => {
+            const session = await protectPrivatePage();
+            if (session) {
+                await loadDashboardData(session);
+                initChart();
+
+                // Listeners Logout
+                document.getElementById('logout-btn-sidebar').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    handleLogout();
+                });
+                document.getElementById('logout-btn-mobile').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    handleLogout();
+                });
+            }
+        });
+
+    </script>
+</body>
+</html>

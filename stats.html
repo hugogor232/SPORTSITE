@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Statistiques - FitCoach Pro</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            background-color: #121212;
+            padding-top: 80px;
+            min-height: 100vh;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header & Controls */
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stats-title {
+            font-family: 'Oswald', sans-serif;
+            color: white;
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .controls-wrapper {
+            display: flex;
+            gap: 1rem;
+            background: #1a1a1a;
+            padding: 5px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .metric-btn {
+            background: transparent;
+            border: none;
+            color: #888;
+            padding: 8px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .metric-btn:hover {
+            color: white;
+        }
+
+        .metric-btn.active {
+            background: var(--primary-color, #ccff00);
+            color: black;
+            font-weight: bold;
+        }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-color);
+        }
+
+        .summary-label {
+            color: #888;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-value {
+            color: white;
+            font-size: 2rem;
+            font-family: 'Oswald', sans-serif;
+            font-weight: bold;
+        }
+
+        .summary-trend {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .trend-up { color: #ff4444; } /* Rouge pour prise de poids si objectif perte, ou vert pour muscle */
+        .trend-down { color: #00ff88; }
+
+        /* Chart Section */
+        .chart-wrapper {
+            background: #1a1a1a;
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 2rem;
+            height: 400px;
+            position: relative;
+        }
+
+        /* Logs Table */
+        .logs-section {
+            background: #1a1a1a;
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .logs-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #ccc;
+        }
+
+        .logs-table th {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: var(--primary-color);
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .logs-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logs-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .delete-btn {
+            background: transparent;
+            border: none;
+            color: #ff4444;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .delete-btn:hover {
+            transform: scale(1.2);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: white;
+            margin-bottom: 0.5rem;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .stats-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .controls-wrapper {
+                width: 100%;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-dumbbell"></i> FitCoach<span class="highlight">Pro</span>
+            </a>
+            
+            <button class="burger-menu" id="burger-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-links" id="nav-links">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="my-program.html">Mon Programme</a>
+                <a href="stats.html" class="active">Statistiques</a>
+                <a href="chat.html">Coach Chat</a>
+                <a href="#" id="logout-btn" class="btn-primary">Déconnexion</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="stats-container">
+        
+        <!-- Header & Filters -->
+        <header class="stats-header">
+            <h1 class="stats-title">SUIVI DE <span class="text-gradient">PROGRESSION</span></h1>
+            <div class="controls-wrapper">
+                <button class="metric-btn active" data-metric="weight">Poids (kg)</button>
+                <button class="metric-btn" data-metric="body_fat">Masse Grasse (%)</button>
+                <button class="metric-btn" data-metric="bench_press">Max Bench</button>
+                <button class="metric-btn" data-metric="squat">Max Squat</button>
+            </div>
+        </header>
+
+        <!-- Summary Cards -->
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div class="summary-label">Actuel</div>
+                <div class="summary-value" id="current-val">--</div>
+                <div class="summary-trend" id="current-date-label">Dernière mesure</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Départ</div>
+                <div class="summary-value" id="start-val">--</div>
+                <div class="summary-trend">Mesure initiale</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Variation</div>
+                <div class="summary-value" id="delta-val">--</div>
+                <div class="summary-trend" id="delta-trend">--</div>
+            </div>
+        </div>
+
+        <!-- Chart -->
+        <div class="chart-wrapper">
+            <canvas id="progressChart"></canvas>
+        </div>
+
+        <!-- Logs History -->
+        <section class="logs-section">
+            <div class="section-header">
+                <h3 style="color:white; font-family:'Oswald'; margin:0;">HISTORIQUE</h3>
+                <button onclick="openModal()" class="btn-primary btn-sm"><i class="fa-solid fa-plus"></i> AJOUTER UNE MESURE</button>
+            </div>
+            
+            <div style="overflow-x: auto;">
+                <table class="logs-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Métrique</th>
+                            <th>Valeur</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logs-table-body">
+                        <!-- JS Injection -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="empty-logs-msg" style="display:none; text-align:center; color:#888; padding:2rem;">
+                Aucune donnée enregistrée pour cette métrique.
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Add Log Modal -->
+    <div id="log-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 style="color:white; font-family:'Oswald'; margin-bottom:1.5rem;">Nouvelle Mesure</h2>
+            
+            <form id="add-log-form">
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input type="date" id="log-date" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Type de mesure</label>
+                    <select id="log-metric" class="form-control" required>
+                        <option value="weight">Poids (kg)</option>
+                        <option value="body_fat">Masse Grasse (%)</option>
+                        <option value="bench_press">Développé Couché (Max kg)</option>
+                        <option value="squat">Squat (Max kg)</option>
+                        <option value="deadlift">Soulevé de Terre (Max kg)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Valeur</label>
+                    <input type="number" step="0.1" id="log-value" class="form-control" placeholder="Ex: 75.5" required>
+                </div>
+
+                <button type="submit" id="submit-btn" class="btn-primary w-100">ENREGISTRER</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+
+    <!-- Supabase Logic -->
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+
+        // Variables globales
+        let chartInstance = null;
+        let currentMetric = 'weight';
+        let allLogs = [];
+        let userId = null;
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', async () => {
+            const session = await checkSession();
+            if (session) {
+                userId = session.user.id;
+                setupEventListeners();
+                await fetchLogs();
+            }
+
+            // Logout
+            document.getElementById('logout-btn').addEventListener('click', async (e) => {
+                e.preventDefault();
+                await supabase.auth.signOut();
+                window.location.href = 'index.html';
+            });
+        });
+
+        // Vérification Session
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return null;
+            }
+            return session;
+        }
+
+        // Récupération des données
+        async function fetchLogs() {
+            try {
+                // Table 'progress_logs': id, user_id, date, metric_type, value
+                const { data, error } = await supabase
+                    .from('progress_logs')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .order('date', { ascending: true });
+
+                if (error) throw error;
+
+                allLogs = data || [];
+                updateUI();
+
+            } catch (error) {
+                console.error('Erreur fetch logs:', error);
+                // Mock data pour la démo si table vide ou erreur
+                if (allLogs.length === 0) {
+                    console.log("Utilisation données mock");
+                    allLogs = getMockData();
+                    updateUI();
+                }
+            }
+        }
+
+        // Mise à jour de l'interface (Chart, Cards, Table)
+        function updateUI() {
+            // Filtrer selon la métrique active
+            const filteredLogs = allLogs.filter(log => log.metric_type === currentMetric);
+            
+            // Trier par date
+            filteredLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            renderChart(filteredLogs);
+            renderSummary(filteredLogs);
+            renderTable(filteredLogs);
+        }
+
+        // Chart.js Rendering
+        function renderChart(logs) {
+            const ctx = document.getElementById('progressChart').getContext('2d');
+            
+            // Préparation données
+            const labels = logs.map(log => new Date(log.date).toLocaleDateString('fr-FR'));
+            const dataPoints = logs.map(log => log.value);
+
+            // Destruction ancien chart
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            // Config couleur selon métrique
+            let color = '#ccff00'; // Default Green
+            if (currentMetric === 'body_fat') color = '#ff4400'; // Orange
+            if (currentMetric.includes('bench') || currentMetric.includes('squat')) color = '#00ccff'; // Blue
+
+            // Création Gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, color);
+            gradient.addColorStop(1, 'rgba(18, 18, 18, 0)');
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: formatMetricName(currentMetric),
+                        data: dataPoints,
+                        borderColor: color,
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#1a1a1a',
+                        pointBorderColor: color,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1a1a1a',
+                            titleColor: '#fff',
+                            bodyColor: '#ccc',
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1,
+                            displayColors: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#888' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#888' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Summary Cards
+        function renderSummary(logs) {
+            if (logs.length === 0) {
+                document.getElementById('current-val').textContent = '--';
+                document.getElementById('start-val').textContent = '--';
+                document.getElementById('delta-val').textContent = '--';
+                return;
+            }
+
+            const start = logs[0].value;
+            const current = logs[logs.length - 1].value;
+            const delta = current - start;
+            
+            document.getElementById('current-val').textContent = current;
+            document.getElementById('start-val').textContent = start;
+            
+            const deltaEl = document.getElementById('delta-val');
+            const trendEl = document.getElementById('delta-trend');
+            
+            deltaEl.textContent = (delta > 0 ? '+' : '') + delta.toFixed(1);
+            
+            // Logique couleur (dépend de l'objectif, simplifié ici)
+            if (delta > 0) {
+                deltaEl.style.color = currentMetric === 'weight' || currentMetric === 'body_fat' ? '#ff4444' : '#00ff88';
+                trendEl.innerHTML = '<i class="fa-solid fa-arrow-trend-up"></i> Tendance hausse';
+                trendEl.className = 'summary-trend ' + (currentMetric === 'weight' ? 'trend-up' : 'trend-down');
+            } else if (delta < 0) {
+                deltaEl.style.color = currentMetric === 'weight' || currentMetric === 'body_fat' ? '#00ff88' : '#ff4444';
+                trendEl.innerHTML = '<i class="fa-solid fa-arrow-trend-down"></i> Tendance baisse';
+                trendEl.className = 'summary-trend ' + (currentMetric === 'weight' ? 'trend-down' : 'trend-up');
+            } else {
+                deltaEl.style.color = '#ccc';
+                trendEl.innerHTML = '<i class="fa-solid fa-minus"></i> Stable';
+            }
+        }
+
+        // Table Rendering
+        function renderTable(logs) {
+            const tbody = document.getElementById('logs-table-body');
+            const emptyMsg = document.getElementById('empty-logs-msg');
+            tbody.innerHTML = '';
+
+            if (logs.length === 0) {
+                emptyMsg.style.display = 'block';
+                return;
+            }
+            emptyMsg.style.display = 'none';
+
+            // Afficher les 10 derniers logs (inversé pour avoir le plus récent en haut)
+            const recentLogs = [...logs].reverse().slice(0, 10);
+
+            recentLogs.forEach(log => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${new Date(log.date).toLocaleDateString('fr-FR')}</td>
+                    <td>${formatMetricName(log.metric_type)}</td>
+                    <td style="font-weight:bold; color:white;">${log.value}</td>
+                    <td>
+                        <button class="delete-btn" onclick="deleteLog('${log.id}')">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Ajout de Log
+        document.getElementById('add-log-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true;
+            btn.textContent = 'Enregistrement...';
+
+            const newLog = {
+                user_id: userId,
+                date: document.getElementById('log-date').value,
+                metric_type: document.getElementById('log-metric').value,
+                value: parseFloat(document.getElementById('log-value').value)
+            };
+
+            try {
+                const { error } = await supabase.from('progress_logs').insert([newLog]);
+                if (error) throw error;
+
+                // Refresh
+                await fetchLogs();
+                closeModal();
+                document.getElementById('add-log-form').reset();
+                
+                // Switch view to added metric
+                currentMetric = newLog.metric_type;
+                updateMetricButtons();
+                updateUI();
+
+            } catch (error) {
+                console.error('Erreur ajout log:', error);
+                alert("Erreur lors de l'enregistrement.");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'ENREGISTRER';
+            }
+        });
+
+        // Suppression Log (Global scope pour onclick)
+        window.deleteLog = async (id) => {
+            if (!confirm('Voulez-vous vraiment supprimer cette mesure ?')) return;
+
+            try {
+                const { error } = await supabase.from('progress_logs').delete().eq('id', id);
+                if (error) throw error;
+                
+                // Remove from local array & update UI
+                allLogs = allLogs.filter(log => log.id !== id);
+                updateUI();
+
+            } catch (error) {
+                console.error('Erreur suppression:', error);
+            }
+        };
+
+        // UI Helpers
+        function setupEventListeners() {
+            // Metric Buttons
+            document.querySelectorAll('.metric-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentMetric = btn.getAttribute('data-metric');
+                    updateMetricButtons();
+                    updateUI();
+                });
+            });
+
+            // Set default date to today
+            document.getElementById('log-date').valueAsDate = new Date();
+        }
+
+        function updateMetricButtons() {
+            document.querySelectorAll('.metric-btn').forEach(btn => {
+                if (btn.getAttribute('data-metric') === currentMetric) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        function formatMetricName(metric) {
+            const names = {
+                'weight': 'Poids (kg)',
+                'body_fat': 'Masse Grasse (%)',
+                'bench_press': 'Bench Press',
+                'squat': 'Squat',
+                'deadlift': 'Deadlift'
+            };
+            return names[metric] || metric;
+        }
+
+        // Modal Functions
+        window.openModal = () => document.getElementById('log-modal').style.display = 'flex';
+        window.closeModal = () => document.getElementById('log-modal').style.display = 'none';
+
+        // Mock Data Generator
+        function getMockData() {
+            const logs = [];
+            const today = new Date();
+            
+            // Generate Weight Data
+            let weight = 85;
+            for (let i = 30; i >= 0; i -= 3) {
+                const d = new Date(today);
+                d.setDate(d.getDate() - i);
+                weight -= (Math.random() * 0.5); // Perte progressive
+                logs.push({
+                    id: 'mock_w_' + i,
+                    user_id: userId,
+                    date: d.toISOString().split('T')[0],
+                    metric_type: 'weight',
+                    value: parseFloat(weight.toFixed(1))
+                });
+            }
+
+            // Generate Bench Data
+            let bench = 60;
+            for (let i = 30; i >= 0; i -= 7) {
+                const d = new Date(today);
+                d.setDate(d.getDate() - i);
+                bench += (Math.random() * 2); // Gain progressif
+                logs.push({
+                    id: 'mock_b_' + i,
+                    user_id: userId,
+                    date: d.toISOString().split('T')[0],
+                    metric_type: 'bench_press',
+                    value: Math.round(bench)
+                });
+            }
+
+            return logs;
+        }
+
+        // Expose globals
+        window.openModal = window.openModal;
+        window.closeModal = window.closeModal;
+        window.deleteLog = window.deleteLog;
+
+    </script>
+</body>
+</html>

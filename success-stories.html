@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success Stories - FitCoach Pro</title>
+    <meta name="description" content="Découvrez les transformations incroyables de nos membres. Avant/Après, témoignages et résultats concrets.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Styles spécifiques pour Success Stories */
+        .stories-header {
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(20,20,20,0.8)), url('https://images.unsplash.com/photo-1517963879466-e1b54ebd512d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
+            padding: 3rem 0;
+        }
+
+        .story-card {
+            background: #1a1a1a;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .story-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.15);
+            border-color: var(--primary-color, #ccff00);
+        }
+
+        .comparison-container {
+            display: flex;
+            height: 250px;
+            position: relative;
+        }
+
+        .comparison-img {
+            width: 50%;
+            height: 100%;
+            object-fit: cover;
+            position: relative;
+            transition: width 0.3s ease;
+        }
+
+        .comparison-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .img-label {
+            position: absolute;
+            bottom: 10px;
+            padding: 4px 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 4px;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .label-before { left: 10px; border-left: 3px solid #ff4444; }
+        .label-after { right: 10px; border-right: 3px solid var(--primary-color, #ccff00); }
+
+        .story-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .user-name {
+            font-size: 1.4rem;
+            color: white;
+            font-family: 'Oswald', sans-serif;
+            margin: 0;
+        }
+
+        .program-tag {
+            font-size: 0.8rem;
+            color: var(--primary-color, #ccff00);
+            border: 1px solid var(--primary-color, #ccff00);
+            padding: 2px 8px;
+            border-radius: 50px;
+            text-transform: uppercase;
+        }
+
+        .story-quote {
+            font-style: italic;
+            color: #ccc;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            position: relative;
+            padding-left: 15px;
+            border-left: 2px solid #444;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 1rem;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stat-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .loader {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem;
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-dumbbell"></i> FitCoach<span class="highlight">Pro</span>
+            </a>
+            
+            <button class="burger-menu" id="burger-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Accueil</a>
+                <a href="programs.html">Programmes</a>
+                <a href="success-stories.html" class="active">Témoignages</a>
+                <a href="pricing.html">Tarifs</a>
+                <a href="login.html" id="auth-action-btn" class="btn-primary">Connexion</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="stories-header">
+        <div class="container">
+            <h1 class="animate-up">TRANSFORMATIONS <span class="text-gradient">RÉELLES</span></h1>
+            <p class="animate-up delay-1">Des résultats concrets obtenus grâce à la méthode FitCoach Pro.</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <section class="section-padding bg-dark">
+        <div class="container">
+            <!-- Filters (Optional JS implementation) -->
+            <div class="filters-wrapper text-center mb-5">
+                <button class="btn-outline active" onclick="filterStories('all')">Tous</button>
+                <button class="btn-outline" onclick="filterStories('weight_loss')">Perte de poids</button>
+                <button class="btn-outline" onclick="filterStories('muscle')">Prise de masse</button>
+            </div>
+
+            <div id="stories-container" class="stories-grid">
+                <div class="loader">
+                    <i class="fa-solid fa-circle-notch fa-spin fa-3x"></i>
+                    <p style="margin-top: 1rem; color: white;">Chargement des transformations...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section bg-dark-gradient">
+        <div class="container text-center">
+            <h2>VOTRE HISTOIRE COMMENCE <span class="highlight">ICI</span></h2>
+            <p>Rejoignez les milliers de membres qui ont changé leur vie.</p>
+            <a href="register.html" class="btn-primary btn-lg">JE COMMENCE MA TRANSFORMATION</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>FitCoach<span class="highlight">Pro</span></h3>
+                <p>La plateforme ultime pour votre transformation physique.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="programs.html">Programmes</a></li>
+                    <li><a href="pricing.html">Tarifs</a></li>
+                    <li><a href="login.html">Connexion</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Légal</h4>
+                <ul>
+                    <li><a href="#">CGU</a></li>
+                    <li><a href="#">Confidentialité</a></li>
+                    <li><a href="#">Mentions Légales</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom text-center">
+            <p>&copy; 2023 FitCoach Pro. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+
+    <!-- Supabase Logic -->
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+
+        const container = document.getElementById('stories-container');
+        const authBtn = document.getElementById('auth-action-btn');
+        let allStories = [];
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkSession();
+            await fetchStories();
+        });
+
+        // Gestion Session
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                authBtn.textContent = 'Mon Dashboard';
+                authBtn.href = 'dashboard.html';
+                authBtn.classList.remove('btn-primary');
+                authBtn.classList.add('btn-secondary');
+            }
+        }
+
+        // Récupération des données
+        async function fetchStories() {
+            try {
+                // Requête vers la table 'testimonials'
+                // Structure attendue: id, name, program_name, quote, image_before, image_after, stats (JSON), category
+                const { data, error } = await supabase
+                    .from('testimonials')
+                    .select('*')
+                    .eq('is_published', true)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                // Si pas de données (pour la démo si la table est vide), on utilise des données mockées
+                if (!data || data.length === 0) {
+                    console.log("Aucune donnée trouvée, utilisation des données de démonstration.");
+                    allStories = getMockStories();
+                } else {
+                    allStories = data;
+                }
+
+                renderStories(allStories);
+
+            } catch (error) {
+                console.error('Erreur fetch stories:', error);
+                // Fallback sur mock data en cas d'erreur (pour la robustesse de la démo)
+                allStories = getMockStories();
+                renderStories(allStories);
+            }
+        }
+
+        // Affichage
+        function renderStories(stories) {
+            container.innerHTML = '';
+
+            if (stories.length === 0) {
+                container.innerHTML = `<div class="text-center" style="grid-column:1/-1; color:white;">Aucun témoignage pour le moment.</div>`;
+                return;
+            }
+
+            stories.forEach(story => {
+                // Parsing des stats si c'est une string JSON
+                let stats = story.stats;
+                if (typeof stats === 'string') {
+                    try { stats = JSON.parse(stats); } catch(e) {}
+                }
+
+                // Construction HTML
+                const card = document.createElement('div');
+                card.className = 'story-card';
+                card.innerHTML = `
+                    <div class="comparison-container">
+                        <div class="comparison-img">
+                            <img src="${story.image_before}" alt="Avant">
+                            <span class="img-label label-before">AVANT</span>
+                        </div>
+                        <div class="comparison-img">
+                            <img src="${story.image_after}" alt="Après">
+                            <span class="img-label label-after">APRÈS</span>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        <div class="user-header">
+                            <h3 class="user-name">${story.name}</h3>
+                            <span class="program-tag">${story.program_name}</span>
+                        </div>
+                        <p class="story-quote">"${story.quote}"</p>
+                        <div class="stats-row">
+                            ${renderStats(stats)}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Helper pour afficher les stats
+        function renderStats(stats) {
+            if (!stats) return '';
+            let html = '';
+            // On suppose que stats est un objet { "Poids": "-10kg", "Durée": "3 mois" }
+            for (const [key, value] of Object.entries(stats)) {
+                html += `
+                    <div class="stat-badge">
+                        <span class="stat-value">${value}</span>
+                        <span class="stat-label">${key}</span>
+                    </div>
+                `;
+            }
+            return html;
+        }
+
+        // Données de démonstration (Fallback)
+        function getMockStories() {
+            return [
+                {
+                    id: 1,
+                    name: "Alexandre P.",
+                    program_name: "Hypertrophie Pro",
+                    quote: "Je n'avais jamais réussi à dépasser mes plateaux. Avec FitCoach Pro, j'ai pris 8kg de muscle sec en 6 mois.",
+                    image_before: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", // Placeholder
+                    image_after: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", // Placeholder
+                    stats: { "Gain": "+8kg", "Durée": "6 mois" },
+                    category: "muscle"
+                },
+                {
+                    id: 2,
+                    name: "Julie M.",
+                    program_name: "Cardio Burn",
+                    quote: "Après ma grossesse, je voulais retrouver la forme. Le suivi nutritionnel a fait toute la différence.",
+                    image_before: "https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                    image_after: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                    stats: { "Perte": "-12kg", "Taille": "-15cm" },
+                    category: "weight_loss"
+                },
+                {
+                    id: 3,
+                    name: "Marc D.",
+                    program_name: "Athlète Elite",
+                    quote: "La préparation physique m'a permis de finir mon premier marathon en moins de 3h30.",
+                    image_before: "https://images.unsplash.com/photo-1483721310020-03333e577078?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                    image_after: "https://images.unsplash.com/photo-1552674605-469523170d9e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                    stats: { "Temps": "3h28", "Endurance": "+40%" },
+                    category: "cardio"
+                }
+            ];
+        }
+
+        // Fonction globale pour le filtrage (attachée à window pour l'accès onclick)
+        window.filterStories = (category) => {
+            // Update UI boutons
+            const buttons = document.querySelectorAll('.filters-wrapper button');
+            buttons.forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (category === 'all') {
+                renderStories(allStories);
+            } else {
+                const filtered = allStories.filter(s => s.category === category);
+                renderStories(filtered);
+            }
+        };
+
+    </script>
+</body>
+</html>

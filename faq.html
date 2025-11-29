@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - FitCoach Pro</title>
+    <meta name="description" content="Réponses aux questions fréquentes sur le coaching, les abonnements et l'utilisation de la plateforme FitCoach Pro.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Styles spécifiques FAQ */
+        .faq-header {
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(20,20,20,0.8)), url('https://images.unsplash.com/photo-1552674605-469523170d9e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .faq-section {
+            padding: 4rem 0;
+            background-color: var(--bg-dark, #121212);
+            min-height: 60vh;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-search-wrapper {
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .faq-search-input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .faq-search-input:focus {
+            outline: none;
+            border-color: var(--primary-color, #ccff00);
+            box-shadow: 0 0 15px rgba(204, 255, 0, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        .faq-item {
+            background: #1a1a1a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .faq-item.active {
+            border-color: var(--primary-color, #ccff00);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem;
+            color: white;
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .faq-question:hover {
+            color: var(--primary-color, #ccff00);
+        }
+
+        .faq-toggle-icon {
+            transition: transform 0.3s ease;
+            color: var(--primary-color, #ccff00);
+        }
+
+        .faq-item.active .faq-toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px; /* Valeur arbitraire suffisante */
+            padding: 0 1.5rem 1.5rem 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .faq-answer p {
+            color: #ccc;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .category-title {
+            color: var(--primary-color, #ccff00);
+            font-family: 'Oswald', sans-serif;
+            margin: 2rem 0 1rem;
+            font-size: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        .contact-support {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 3rem;
+            background: linear-gradient(45deg, #1a1a1a, #222);
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .loader {
+            text-align: center;
+            padding: 2rem;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-dumbbell"></i> FitCoach<span class="highlight">Pro</span>
+            </a>
+            
+            <button class="burger-menu" id="burger-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Accueil</a>
+                <a href="programs.html">Programmes</a>
+                <a href="pricing.html">Tarifs</a>
+                <a href="faq.html" class="active">FAQ</a>
+                <a href="login.html" id="auth-action-btn" class="btn-primary">Connexion</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="faq-header">
+        <div class="container">
+            <h1 class="animate-up">FOIRE AUX <span class="text-gradient">QUESTIONS</span></h1>
+            <p class="animate-up delay-1">Tout ce que vous devez savoir pour commencer votre transformation.</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <section class="faq-section">
+        <div class="container faq-container">
+            
+            <!-- Search -->
+            <div class="faq-search-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="faq-search" class="faq-search-input" placeholder="Rechercher une question (ex: paiement, programme, nutrition)...">
+            </div>
+
+            <!-- FAQ List -->
+            <div id="faq-list">
+                <div class="loader">
+                    <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
+                    <p>Chargement des réponses...</p>
+                </div>
+            </div>
+
+            <!-- Contact Fallback -->
+            <div class="contact-support">
+                <h3>Vous ne trouvez pas votre réponse ?</h3>
+                <p style="color: #999; margin-bottom: 1.5rem;">Notre équipe de support est disponible 7j/7 pour vous aider.</p>
+                <a href="contact.html" class="btn-secondary">CONTACTER LE SUPPORT</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>FitCoach<span class="highlight">Pro</span></h3>
+                <p>La plateforme ultime pour votre transformation physique.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="programs.html">Programmes</a></li>
+                    <li><a href="pricing.html">Tarifs</a></li>
+                    <li><a href="login.html">Connexion</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Légal</h4>
+                <ul>
+                    <li><a href="#">CGU</a></li>
+                    <li><a href="#">Confidentialité</a></li>
+                    <li><a href="#">Mentions Légales</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom text-center">
+            <p>&copy; 2023 FitCoach Pro. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+
+    <!-- Supabase Logic -->
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+
+        // Variables
+        const faqList = document.getElementById('faq-list');
+        const searchInput = document.getElementById('faq-search');
+        const authBtn = document.getElementById('auth-action-btn');
+        let allFaqs = [];
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkSession();
+            await fetchFaqs();
+            setupSearch();
+        });
+
+        // Gestion Session
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                authBtn.textContent = 'Mon Dashboard';
+                authBtn.href = 'dashboard.html';
+                authBtn.classList.remove('btn-primary');
+                authBtn.classList.add('btn-secondary');
+            }
+        }
+
+        // Récupération des FAQ
+        async function fetchFaqs() {
+            try {
+                // Tentative de fetch depuis Supabase
+                const { data, error } = await supabase
+                    .from('faq_items')
+                    .select('*')
+                    .order('category', { ascending: true }); // Tri par catégorie
+
+                if (error) throw error;
+
+                if (data && data.length > 0) {
+                    allFaqs = data;
+                } else {
+                    // Fallback si la table est vide
+                    allFaqs = getMockFaqs();
+                }
+                
+                renderFaqs(allFaqs);
+
+            } catch (error) {
+                console.warn('Utilisation des données locales suite à erreur DB:', error.message);
+                allFaqs = getMockFaqs();
+                renderFaqs(allFaqs);
+            }
+        }
+
+        // Affichage
+        function renderFaqs(faqs) {
+            faqList.innerHTML = '';
+
+            if (faqs.length === 0) {
+                faqList.innerHTML = `<p class="text-center" style="color:#999;">Aucun résultat trouvé.</p>`;
+                return;
+            }
+
+            // Groupement par catégorie
+            const grouped = faqs.reduce((acc, item) => {
+                (acc[item.category] = acc[item.category] || []).push(item);
+                return acc;
+            }, {});
+
+            // Génération HTML
+            for (const [category, items] of Object.entries(grouped)) {
+                // Titre de catégorie
+                const catTitle = document.createElement('h3');
+                catTitle.className = 'category-title';
+                catTitle.textContent = category;
+                faqList.appendChild(catTitle);
+
+                // Items
+                items.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'faq-item';
+                    itemDiv.innerHTML = `
+                        <button class="faq-question" aria-expanded="false">
+                            ${item.question}
+                            <i class="fa-solid fa-chevron-down faq-toggle-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>${item.answer}</p>
+                        </div>
+                    `;
+                    
+                    // Event Listener pour l'accordéon
+                    const btn = itemDiv.querySelector('.faq-question');
+                    btn.addEventListener('click', () => {
+                        const isActive = itemDiv.classList.contains('active');
+                        
+                        // Fermer tous les autres (optionnel, style accordéon strict)
+                        document.querySelectorAll('.faq-item').forEach(el => {
+                            el.classList.remove('active');
+                            el.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                        });
+
+                        if (!isActive) {
+                            itemDiv.classList.add('active');
+                            btn.setAttribute('aria-expanded', 'true');
+                        }
+                    });
+
+                    faqList.appendChild(itemDiv);
+                });
+            }
+        }
+
+        // Recherche
+        function setupSearch() {
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                
+                if (!term) {
+                    renderFaqs(allFaqs);
+                    return;
+                }
+
+                const filtered = allFaqs.filter(item => 
+                    item.question.toLowerCase().includes(term) || 
+                    item.answer.toLowerCase().includes(term) ||
+                    item.category.toLowerCase().includes(term)
+                );
+
+                renderFaqs(filtered);
+            });
+        }
+
+        // Données de secours (Mock)
+        function getMockFaqs() {
+            return [
+                {
+                    category: "Général",
+                    question: "Qu'est-ce que FitCoach Pro ?",
+                    answer: "FitCoach Pro est une plateforme de coaching sportif complète qui combine l'intelligence artificielle et l'expertise humaine pour créer des programmes d'entraînement et de nutrition 100% personnalisés."
+                },
+                {
+                    category: "Général",
+                    question: "L'application est-elle compatible mobile ?",
+                    answer: "Oui, FitCoach Pro est une Progressive Web App (PWA). Elle fonctionne parfaitement sur tous les smartphones et peut même être installée sur votre écran d'accueil."
+                },
+                {
+                    category: "Abonnements",
+                    question: "Puis-je annuler mon abonnement à tout moment ?",
+                    answer: "Absolument. Il n'y a aucun engagement de durée. Vous pouvez annuler votre abonnement directement depuis votre tableau de bord en un clic."
+                },
+                {
+                    category: "Abonnements",
+                    question: "Quelle est la différence entre le plan Pro et Elite ?",
+                    answer: "Le plan Pro vous donne accès à l'IA et aux programmes illimités. Le plan Elite ajoute un coach humain dédié avec qui vous pouvez échanger par chat et vidéo pour un suivi ultra-personnalisé."
+                },
+                {
+                    category: "Entraînement",
+                    question: "Ai-je besoin de matériel spécifique ?",
+                    answer: "Non. Lors de votre inscription, vous précisez le matériel dont vous disposez (salle de sport, haltères maison, ou poids du corps). L'algorithme adapte le programme en conséquence."
+                },
+                {
+                    category: "Entraînement",
+                    question: "Comment suivre ma progression ?",
+                    answer: "Le tableau de bord intègre des graphiques dynamiques. Vous pouvez logger vos poids, vos mensurations et vos performances à chaque séance pour voir votre évolution."
+                },
+                {
+                    category: "Nutrition",
+                    question: "Les plans alimentaires prennent-ils en compte mes allergies ?",
+                    answer: "Oui, vous pouvez spécifier vos allergies, intolérances (gluten, lactose) et préférences (végétarien, vegan) dans votre profil. Les recettes proposées respecteront ces contraintes."
+                }
+            ];
+        }
+
+    </script>
+</body>
+</html>

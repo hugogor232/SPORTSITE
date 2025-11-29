@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmes d'Entraînement - FitCoach Pro</title>
+    <meta name="description" content="Catalogue complet de nos programmes de coaching sportif. Perte de poids, prise de masse, cardio, yoga. Trouvez le programme adapté à votre niveau.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Styles spécifiques à la page programmes */
+        .programs-header {
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(20,20,20,0.8)), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 120px 0 60px;
+            text-align: center;
+            color: white;
+        }
+
+        .filters-section {
+            padding: 2rem 0;
+            background-color: var(--bg-dark, #121212);
+            position: sticky;
+            top: 70px; /* Ajuster selon la hauteur de la nav */
+            z-index: 90;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .filters-wrapper {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary-color, #ccff00);
+            color: black;
+            border-color: var(--primary-color, #ccff00);
+            box-shadow: 0 0 15px rgba(204, 255, 0, 0.4);
+        }
+
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            padding: 3rem 0;
+        }
+
+        .program-card {
+            background: #1a1a1a;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .program-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-color: var(--secondary-color, #ff4400);
+        }
+
+        .program-image {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+            position: relative;
+        }
+
+        .program-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: black;
+        }
+
+        .badge-beginner { background-color: #00ff88; }
+        .badge-intermediate { background-color: #ffcc00; }
+        .badge-advanced { background-color: #ff4400; color: white; }
+
+        .program-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .program-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: white;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .program-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .program-meta i {
+            color: var(--primary-color, #ccff00);
+            margin-right: 5px;
+        }
+
+        .program-desc {
+            color: #ccc;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .program-footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 1rem;
+        }
+
+        .program-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .loader {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-dumbbell"></i> FitCoach<span class="highlight">Pro</span>
+            </a>
+            
+            <button class="burger-menu" id="burger-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Accueil</a>
+                <a href="coaches.html">Coachs</a>
+                <a href="programs.html" class="active">Programmes</a>
+                <a href="pricing.html">Tarifs</a>
+                <a href="login.html" id="auth-action-btn" class="btn-primary">Connexion</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="programs-header">
+        <div class="container">
+            <h1 class="animate-up">CHOISISSEZ VOTRE <span class="text-gradient">VOIE</span></h1>
+            <p class="animate-up delay-1">Des programmes conçus par des experts pour transformer votre corps et votre esprit.</p>
+        </div>
+    </header>
+
+    <!-- Filters -->
+    <section class="filters-section">
+        <div class="container filters-wrapper">
+            <button class="filter-btn active" data-filter="all">Tout voir</button>
+            <button class="filter-btn" data-filter="beginner">Débutant</button>
+            <button class="filter-btn" data-filter="intermediate">Intermédiaire</button>
+            <button class="filter-btn" data-filter="advanced">Avancé</button>
+            <button class="filter-btn" data-filter="weight_loss">Perte de poids</button>
+            <button class="filter-btn" data-filter="muscle">Prise de masse</button>
+        </div>
+    </section>
+
+    <!-- Programs Grid -->
+    <section class="bg-dark section-padding">
+        <div class="container">
+            <div id="programs-container" class="programs-grid">
+                <div class="loader">
+                    <i class="fa-solid fa-circle-notch fa-spin fa-3x"></i>
+                    <p style="margin-top: 1rem; color: white;">Chargement des programmes...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>FitCoach<span class="highlight">Pro</span></h3>
+                <p>La plateforme ultime pour votre transformation physique.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="programs.html">Programmes</a></li>
+                    <li><a href="pricing.html">Tarifs</a></li>
+                    <li><a href="login.html">Connexion</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Légal</h4>
+                <ul>
+                    <li><a href="#">CGU</a></li>
+                    <li><a href="#">Confidentialité</a></li>
+                    <li><a href="#">Mentions Légales</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom text-center">
+            <p>&copy; 2023 FitCoach Pro. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+
+    <!-- Supabase Logic -->
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+
+        // Variables globales
+        let allPrograms = [];
+        let currentFilter = 'all';
+        const container = document.getElementById('programs-container');
+        const authBtn = document.getElementById('auth-action-btn');
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkSession();
+            await fetchPrograms();
+            setupFilters();
+        });
+
+        // Vérification de la session
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                authBtn.textContent = 'Mon Dashboard';
+                authBtn.href = 'dashboard.html';
+                authBtn.classList.remove('btn-primary');
+                authBtn.classList.add('btn-secondary');
+            }
+        }
+
+        // Récupération des programmes
+        async function fetchPrograms() {
+            try {
+                // On récupère tous les programmes actifs
+                // Structure attendue de la table 'programs' :
+                // id, title, description, level (beginner, intermediate, advanced), 
+                // goal (weight_loss, muscle, cardio), duration_weeks, price, image_url
+                
+                const { data, error } = await supabase
+                    .from('programs')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                allPrograms = data || [];
+                renderPrograms(allPrograms);
+
+            } catch (error) {
+                console.error('Erreur fetch programs:', error);
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; color: #ff4444;">
+                        <h3>Erreur de chargement</h3>
+                        <p>Impossible de récupérer les programmes. Veuillez réessayer.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Affichage des programmes
+        function renderPrograms(programs) {
+            container.innerHTML = '';
+
+            if (programs.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; color: #888; padding: 4rem;">
+                        <i class="fa-solid fa-dumbbell fa-3x" style="margin-bottom: 1rem;"></i>
+                        <h3>Aucun programme trouvé</h3>
+                        <p>Essayez de modifier vos filtres.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            programs.forEach(program => {
+                // Gestion des badges de niveau
+                let badgeClass = 'badge-intermediate';
+                let levelText = program.level;
+                
+                if (program.level === 'beginner') {
+                    badgeClass = 'badge-beginner';
+                    levelText = 'Débutant';
+                } else if (program.level === 'advanced') {
+                    badgeClass = 'badge-advanced';
+                    levelText = 'Avancé';
+                } else if (program.level === 'intermediate') {
+                    levelText = 'Intermédiaire';
+                }
+
+                // Image par défaut si null
+                const image = program.image_url || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+
+                // Prix
+                const priceDisplay = program.price > 0 ? `${program.price}€` : 'GRATUIT';
+
+                const card = document.createElement('div');
+                card.className = 'program-card';
+                card.innerHTML = `
+                    <div class="program-image">
+                        <img src="${image}" alt="${program.title}" style="width:100%; height:100%; object-fit:cover;">
+                        <span class="program-badge ${badgeClass}">${levelText}</span>
+                    </div>
+                    <div class="program-content">
+                        <h3 class="program-title">${program.title}</h3>
+                        <div class="program-meta">
+                            <span><i class="fa-regular fa-clock"></i> ${program.duration_weeks} semaines</span>
+                            <span><i class="fa-solid fa-bullseye"></i> ${formatGoal(program.goal)}</span>
+                        </div>
+                        <p class="program-desc">${program.description ? program.description.substring(0, 100) + '...' : ''}</p>
+                        <div class="program-footer">
+                            <span class="program-price">${priceDisplay}</span>
+                            <button onclick="handleProgramClick('${program.id}')" class="btn-primary btn-sm">
+                                DÉCOUVRIR
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Formatage du but (goal) pour l'affichage
+        function formatGoal(goal) {
+            const goals = {
+                'weight_loss': 'Perte de poids',
+                'muscle': 'Prise de masse',
+                'cardio': 'Cardio & Endurance',
+                'flexibility': 'Souplesse'
+            };
+            return goals[goal] || goal || 'Général';
+        }
+
+        // Gestion des filtres
+        function setupFilters() {
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // UI Update
+                    buttons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const filterValue = btn.getAttribute('data-filter');
+                    
+                    // Logic Update
+                    if (filterValue === 'all') {
+                        renderPrograms(allPrograms);
+                    } else {
+                        // On filtre soit sur le niveau, soit sur l'objectif
+                        const filtered = allPrograms.filter(p => 
+                            p.level === filterValue || p.goal === filterValue
+                        );
+                        renderPrograms(filtered);
+                    }
+                });
+            });
+        }
+
+        // Gestion du clic sur un programme (Global scope pour l'attribut onclick)
+        window.handleProgramClick = async (programId) => {
+            const { data: { session } } = await supabase.auth.getSession();
+            
+            if (session) {
+                // Si connecté, on redirige vers le détail du programme ou le paiement
+                // Pour l'instant, redirection vers dashboard avec paramètre
+                window.location.href = `dashboard.html?action=view_program&id=${programId}`;
+            } else {
+                // Si pas connecté, redirection vers inscription avec le programme pré-sélectionné
+                window.location.href = `register.html?program_id=${programId}`;
+            }
+        };
+
+    </script>
+</body>
+</html>

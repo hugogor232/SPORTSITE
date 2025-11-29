@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - FitCoach Pro</title>
+    <meta name="description" content="Rejoignez FitCoach Pro. Créez votre compte pour accéder à des programmes de coaching personnalisés et transformer votre vie.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Styles spécifiques Auth (similaire à login.html pour cohérence) */
+        body {
+            background-color: #121212;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(20,20,20,0.9)), url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color, #ccff00), var(--secondary-color, #ff4400));
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-logo {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .auth-title {
+            color: #ccc;
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            transition: color 0.3s;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color, #ccff00);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .form-control:focus + i {
+            color: var(--primary-color, #ccff00);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-color, #ccff00);
+            color: black;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(204, 255, 0, 0.3);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .auth-footer a {
+            color: var(--primary-color, #ccff00);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .alert-error {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid #ff4444;
+            color: #ff4444;
+        }
+
+        .alert-success {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+        }
+
+        .terms-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: #ccc;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .terms-check input {
+            margin-top: 3px;
+            accent-color: var(--primary-color);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <div class="auth-header">
+            <a href="index.html" class="auth-logo">
+                <i class="fa-solid fa-dumbbell"></i> FitCoach<span class="highlight">Pro</span>
+            </a>
+            <p class="auth-title">Commencez votre transformation aujourd'hui</p>
+        </div>
+
+        <!-- Messages -->
+        <div id="error-message" class="alert alert-error">
+            <i class="fa-solid fa-circle-exclamation"></i> <span>Erreur</span>
+        </div>
+        <div id="success-message" class="alert alert-success">
+            <i class="fa-solid fa-check-circle"></i> <span>Compte créé ! Veuillez vérifier vos emails pour confirmer votre inscription.</span>
+        </div>
+
+        <form id="register-form">
+            <div class="form-group">
+                <input type="text" id="fullname" class="form-control" placeholder="Nom complet" required minlength="2">
+                <i class="fa-solid fa-user"></i>
+            </div>
+
+            <div class="form-group">
+                <input type="email" id="email" class="form-control" placeholder="Email" required>
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+            
+            <div class="form-group">
+                <input type="password" id="password" class="form-control" placeholder="Mot de passe (6 caractères min)" required minlength="6">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <div class="form-group">
+                <input type="password" id="confirm-password" class="form-control" placeholder="Confirmer le mot de passe" required>
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <div class="terms-check">
+                <input type="checkbox" id="terms" required>
+                <label for="terms">J'accepte les <a href="#" style="color:var(--primary-color)">Conditions Générales d'Utilisation</a> et la Politique de Confidentialité.</label>
+            </div>
+
+            <button type="submit" id="submit-btn" class="btn-submit">
+                CRÉER MON COMPTE <i class="fa-solid fa-user-plus" style="margin-left: 5px;"></i>
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Déjà membre ? <a href="login.html">Se connecter</a></p>
+        </div>
+    </div>
+
+    <!-- Supabase Logic -->
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+
+        // Éléments du DOM
+        const registerForm = document.getElementById('register-form');
+        const errorAlert = document.getElementById('error-message');
+        const successAlert = document.getElementById('success-message');
+        const submitBtn = document.getElementById('submit-btn');
+
+        // Récupération des paramètres URL (ex: ?plan=pro)
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedPlan = urlParams.get('plan');
+        const selectedProgram = urlParams.get('program_id');
+
+        // Gestion de l'inscription
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Reset UI
+            errorAlert.style.display = 'none';
+            successAlert.style.display = 'none';
+            
+            const fullname = document.getElementById('fullname').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            // Validation basique
+            if (password !== confirmPassword) {
+                showError("Les mots de passe ne correspondent pas.");
+                return;
+            }
+
+            if (password.length < 6) {
+                showError("Le mot de passe doit contenir au moins 6 caractères.");
+                return;
+            }
+
+            // Loading state
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Création...';
+
+            try {
+                // 1. Inscription Supabase Auth
+                // On passe le nom complet dans les métadonnées pour qu'un Trigger Postgres puisse créer le profil
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            full_name: fullname,
+                            interested_plan: selectedPlan || 'starter',
+                            interested_program: selectedProgram || null
+                        }
+                    }
+                });
+
+                if (error) throw error;
+
+                // 2. Gestion de la réponse
+                if (data.user && !data.session) {
+                    // Cas : Email confirmation requise (Configuration par défaut Supabase)
+                    successAlert.style.display = 'block';
+                    registerForm.reset();
+                    submitBtn.innerHTML = 'Compte créé';
+                } else if (data.user && data.session) {
+                    // Cas : Email confirmation désactivée (Auto-confirm)
+                    // On peut rediriger directement
+                    window.location.href = 'dashboard.html?welcome=true';
+                }
+
+            } catch (error) {
+                console.error('Erreur inscription:', error);
+                let msg = "Une erreur est survenue lors de l'inscription.";
+                
+                if (error.message.includes("User already registered")) {
+                    msg = "Cet email est déjà utilisé. Veuillez vous connecter.";
+                } else if (error.message.includes("Password")) {
+                    msg = "Le mot de passe est trop faible.";
+                }
+                
+                showError(msg);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        });
+
+        function showError(message) {
+            errorAlert.style.display = 'block';
+            errorAlert.querySelector('span').textContent = message;
+        }
+
+        // Vérification session existante
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', checkSession);
+
+    </script>
+</body>
+</html>

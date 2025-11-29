@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - FitCoach Pro</title>
+    <meta name="description" content="Une question ? Besoin d'un renseignement sur nos programmes de coaching ? Contactez l'équipe FitCoach Pro.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Styles spécifiques Contact */
+        .contact-header {
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(20,20,20,0.8)), url('https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .contact-section {
+            padding: 4rem 0;
+            background-color: var(--bg-dark, #121212);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 3rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .contact-info-card {
+            background: #1a1a1a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2.5rem;
+            height: 100%;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+
+        .info-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(204, 255, 0, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color, #ccff00);
+            font-size: 1.2rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .info-content h4 {
+            color: white;
+            font-family: 'Oswald', sans-serif;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .info-content p, .info-content a {
+            color: #ccc;
+            line-height: 1.6;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .info-content a:hover {
+            color: var(--primary-color, #ccff00);
+        }
+
+        .contact-form-card {
+            background: #1a1a1a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: white;
+            margin-bottom: 0.5rem;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color, #ccff00);
+            box-shadow: 0 0 10px rgba(204, 255, 0, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .alert-message {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .alert-success {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+        }
+
+        .alert-error {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid #ff4444;
+            color: #ff4444;
+        }
+
+        @media (max-width: 900px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-dumbbell"></i> FitCoach<span class="highlight">Pro</span>
+            </a>
+            
+            <button class="burger-menu" id="burger-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Accueil</a>
+                <a href="programs.html">Programmes</a>
+                <a href="pricing.html">Tarifs</a>
+                <a href="contact.html" class="active">Contact</a>
+                <a href="login.html" id="auth-action-btn" class="btn-primary">Connexion</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="contact-header">
+        <div class="container">
+            <h1 class="animate-up">CONTACTEZ <span class="text-gradient">L'ÉQUIPE</span></h1>
+            <p class="animate-up delay-1">Nous sommes là pour répondre à toutes vos questions et vous aider à atteindre vos objectifs.</p>
+        </div>
+    </header>
+
+    <!-- Contact Content -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-grid">
+                
+                <!-- Info Column -->
+                <div class="contact-info-card animate-up delay-2">
+                    <h3 style="color: white; margin-bottom: 2rem; font-family: 'Oswald', sans-serif;">NOS COORDONNÉES</h3>
+                    
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
+                        <div class="info-content">
+                            <h4>Adresse</h4>
+                            <p>123 Avenue de la Forme<br>75000 Paris, France</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-envelope"></i></div>
+                        <div class="info-content">
+                            <h4>Email</h4>
+                            <a href="mailto:support@fitcoachpro.com">support@fitcoachpro.com</a>
+                            <p>Réponse sous 24h</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-phone"></i></div>
+                        <div class="info-content">
+                            <h4>Téléphone</h4>
+                            <a href="tel:+33123456789">+33 1 23 45 67 89</a>
+                            <p>Lun-Ven : 9h - 18h</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-comments"></i></div>
+                        <div class="info-content">
+                            <h4>Chat Support</h4>
+                            <p>Disponible pour les membres Pro et Elite directement depuis le dashboard.</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 3rem;">
+                        <h4 style="color: white; margin-bottom: 1rem;">SUIVEZ-NOUS</h4>
+                        <div class="social-links" style="justify-content: flex-start;">
+                            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                            <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                            <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                            <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Column -->
+                <div class="contact-form-card animate-up delay-3">
+                    <h3 style="color: white; margin-bottom: 2rem; font-family: 'Oswald', sans-serif;">ENVOYEZ-NOUS UN MESSAGE</h3>
+                    
+                    <div id="success-message" class="alert-message alert-success">
+                        <i class="fa-solid fa-check-circle"></i> Message envoyé avec succès ! Nous vous répondrons très vite.
+                    </div>
+                    <div id="error-message" class="alert-message alert-error">
+                        <i class="fa-solid fa-circle-exclamation"></i> Une erreur est survenue. Veuillez réessayer.
+                    </div>
+
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label for="name" class="form-label">Nom complet</label>
+                            <input type="text" id="name" class="form-control" required placeholder="Votre nom">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" class="form-control" required placeholder="votre@email.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject" class="form-label">Sujet</label>
+                            <select id="subject" class="form-control" required>
+                                <option value="" disabled selected>Choisissez un sujet</option>
+                                <option value="info">Renseignements Programme</option>
+                                <option value="support">Support Technique</option>
+                                <option value="billing">Facturation</option>
+                                <option value="partnership">Partenariat / Coach</option>
+                                <option value="other">Autre</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea id="message" class="form-control" required placeholder="Comment pouvons-nous vous aider ?"></textarea>
+                        </div>
+
+                        <button type="submit" id="submit-btn" class="btn-primary w-100">
+                            ENVOYER LE MESSAGE <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>FitCoach<span class="highlight">Pro</span></h3>
+                <p>La plateforme ultime pour votre transformation physique.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="programs.html">Programmes</a></li>
+                    <li><a href="pricing.html">Tarifs</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Légal</h4>
+                <ul>
+                    <li><a href="#">CGU</a></li>
+                    <li><a href="#">Confidentialité</a></li>
+                    <li><a href="#">Mentions Légales</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom text-center">
+            <p>&copy; 2023 FitCoach Pro. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+
+    <!-- Supabase Logic -->
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+
+        // Éléments DOM
+        const contactForm = document.getElementById('contact-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const successMsg = document.getElementById('success-message');
+        const errorMsg = document.getElementById('error-message');
+        const authBtn = document.getElementById('auth-action-btn');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkSession();
+        });
+
+        // Vérification Session (pour Nav et pré-remplissage)
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            
+            if (session) {
+                // Update Nav
+                authBtn.textContent = 'Mon Dashboard';
+                authBtn.href = 'dashboard.html';
+                authBtn.classList.remove('btn-primary');
+                authBtn.classList.add('btn-secondary');
+
+                // Pré-remplissage du formulaire si connecté
+                if (session.user.email) emailInput.value = session.user.email;
+                
+                // Récupération du nom depuis le profil
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('name')
+                    .eq('id', session.user.id)
+                    .single();
+                
+                if (profile && profile.name) nameInput.value = profile.name;
+            }
+        }
+
+        // Gestion de la soumission du formulaire
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Reset messages
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+            
+            // Loading state
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Envoi en cours...';
+
+            const formData = {
+                name: nameInput.value,
+                email: emailInput.value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value,
+                created_at: new Date().toISOString()
+            };
+
+            try {
+                // Insertion dans Supabase
+                // Assurez-vous que la table 'contact_messages' existe avec les politiques RLS permettant l'insert public
+                const { error } = await supabase
+                    .from('contact_messages')
+                    .insert([formData]);
+
+                if (error) throw error;
+
+                // Succès
+                successMsg.style.display = 'block';
+                contactForm.reset();
+                
+                // Si l'utilisateur était connecté, on remet son email/nom
+                await checkSession();
+
+            } catch (error) {
+                console.error('Erreur envoi message:', error);
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = "Erreur : Impossible d'envoyer le message. Veuillez réessayer plus tard.";
+            } finally {
+                // Reset button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        });
+
+    </script>
+</body>
+</html>

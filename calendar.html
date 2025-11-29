@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendrier - FitCoach Pro</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            background-color: #121212;
+            padding-top: 80px;
+            min-height: 100vh;
+        }
+
+        .calendar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: #1a1a1a;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .month-display {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-color, #ccff00);
+            color: black;
+            border-color: var(--primary-color);
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            justify-content: flex-end;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .dot-done { background: #00ff88; box-shadow: 0 0 5px #00ff88; }
+        .dot-missed { background: #ff4444; box-shadow: 0 0 5px #ff4444; }
+        .dot-planned { background: #888; }
+        .dot-today { background: var(--primary-color); }
+
+        /* Calendar Grid */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            background: #1a1a1a;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .weekday-header {
+            text-align: center;
+            color: #888;
+            font-weight: bold;
+            padding: 10px 0;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .day-cell {
+            background: rgba(255,255,255,0.02);
+            border-radius: 10px;
+            min-height: 120px;
+            padding: 10px;
+            position: relative;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .day-cell:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .day-number {
+            font-family: 'Oswald', sans-serif;
+            color: #ccc;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .day-cell.today {
+            border-color: var(--primary-color);
+            background: rgba(204, 255, 0, 0.05);
+        }
+
+        .day-cell.today .day-number {
+            color: var(--primary-color);
+        }
+
+        .day-cell.other-month {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* Events */
+        .event-pill {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .event-pill:hover {
+            transform: scale(1.02);
+            z-index: 2;
+        }
+
+        .event-done {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border-left: 3px solid #00ff88;
+        }
+
+        .event-missed {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+            border-left: 3px solid #ff4444;
+        }
+
+        .event-planned {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ccc;
+            border-left: 3px solid #888;
+        }
+
+        .event-pill i {
+            margin-right: 5px;
+            font-size: 0.7rem;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 4rem;
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .calendar-grid {
+                grid-template-columns: repeat(1, 1fr);
+                gap: 5px;
+            }
+            .day-cell {
+                min-height: 80px;
+                flex-direction: row;
+                align-items: center;
+                gap: 1rem;
+            }
+            .day-number {
+                min-width: 30px;
+                margin-bottom: 0;
+            }
+            .weekday-header {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-dumbbell"></i> FitCoach<span class="highlight">Pro</span>
+            </a>
+            
+            <button class="burger-menu" id="burger-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-links" id="nav-links">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="my-program.html">Mon Programme</a>
+                <a href="calendar.html" class="active">Calendrier</a>
+                <a href="stats.html">Statistiques</a>
+                <a href="#" id="logout-btn" class="btn-primary">Déconnexion</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="calendar-container">
+        
+        <!-- Controls -->
+        <div class="calendar-header">
+            <button class="nav-btn" id="prev-month"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="month-display" id="month-display">CHARGEMENT...</div>
+            <button class="nav-btn" id="next-month"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item"><span class="dot dot-done"></span> Fait</div>
+            <div class="legend-item"><span class="dot dot-missed"></span> Raté</div>
+            <div class="legend-item"><span class="dot dot-planned"></span> Prévu</div>
+            <div class="legend-item"><span class="dot dot-today"></span> Aujourd'hui</div>
+        </div>
+
+        <!-- Grid -->
+        <div id="calendar-grid" class="calendar-grid">
+            <!-- Headers -->
+            <div class="weekday-header">Lun</div>
+            <div class="weekday-header">Mar</div>
+            <div class="weekday-header">Mer</div>
+            <div class="weekday-header">Jeu</div>
+            <div class="weekday-header">Ven</div>
+            <div class="weekday-header">Sam</div>
+            <div class="weekday-header">Dim</div>
+            
+            <!-- Days injected by JS -->
+            <div class="loader" style="grid-column: 1/-1;">
+                <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Workout Modal -->
+    <div id="workout-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title" style="color:white; font-family:'Oswald'; margin-bottom:0.5rem;">Détails</h2>
+            <p id="modal-date" style="color:var(--primary-color); margin-bottom:1.5rem; font-size:0.9rem;"></p>
+            
+            <div id="modal-body" style="color:#ccc; margin-bottom:2rem;">
+                <!-- Content -->
+            </div>
+
+            <div id="modal-actions" style="text-align: center;">
+                <!-- Buttons -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+
+    <!-- Supabase Logic -->
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+
+        // State
+        let currentDate = new Date();
+        let activeProgram = null;
+        let programWorkouts = [];
+        let workoutLogs = [];
+        let userId = null;
+
+        // Elements
+        const grid = document.getElementById('calendar-grid');
+        const monthDisplay = document.getElementById('month-display');
+        const prevBtn = document.getElementById('prev-month');
+        const nextBtn = document.getElementById('next-month');
+
+        // Init
+        document.addEventListener('DOMContentLoaded', async () => {
+            const session = await checkSession();
+            if (session) {
+                userId = session.user.id;
+                await fetchData();
+                renderCalendar();
+            }
+
+            // Logout
+            document.getElementById('logout-btn').addEventListener('click', async (e) => {
+                e.preventDefault();
+                await supabase.auth.signOut();
+                window.location.href = 'index.html';
+            });
+
+            // Navigation
+            prevBtn.addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                renderCalendar();
+            });
+        });
+
+        // Auth Check
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return null;
+            }
+            return session;
+        }
+
+        // Fetch Data
+        async function fetchData() {
+            try {
+                // 1. Get Active Program
+                const { data: userPrograms, error: upError } = await supabase
+                    .from('user_programs')
+                    .select('id, start_date, programs(id, title, duration_weeks)')
+                    .eq('user_id', userId)
+                    .eq('status', 'active')
+                    .single();
+
+                if (upError || !userPrograms) {
+                    console.log("Pas de programme actif");
+                    return;
+                }
+
+                activeProgram = userPrograms;
+
+                // 2. Get Workouts for this program
+                const { data: workouts, error: wError } = await supabase
+                    .from('workouts')
+                    .select('id, title, day_number')
+                    .eq('program_id', activeProgram.programs.id);
+
+                if (wError) throw wError;
+                programWorkouts = workouts;
+
+                // 3. Get Logs
+                const { data: logs, error: lError } = await supabase
+                    .from('workout_logs')
+                    .select('workout_id, completed_at')
+                    .eq('user_program_id', activeProgram.id);
+
+                if (lError) throw lError;
+                workoutLogs = logs;
+
+            } catch (error) {
+                console.error('Erreur data:', error);
+            }
+        }
+
+        // Render Calendar
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            // Update Header
+            const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+            monthDisplay.textContent = `${monthNames[month]} ${year}`;
+
+            // Clear Grid (keep headers)
+            const headers = document.querySelectorAll('.weekday-header');
+            grid.innerHTML = '';
+            headers.forEach(h => grid.appendChild(h));
+
+            // Calendar Logic
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            
+            // Adjust for Monday start (0=Sun -> 6, 1=Mon -> 0)
+            let startDayIndex = firstDay.getDay() - 1;
+            if (startDayIndex === -1) startDayIndex = 6;
+
+            // Previous Month Padding
+            const prevMonthLastDay = new Date(year, month, 0).getDate();
+            for (let i = startDayIndex; i > 0; i--) {
+                const day = prevMonthLastDay - i + 1;
+                const cell = createCell(day, true);
+                grid.appendChild(cell);
+            }
+
+            // Current Month
+            const today = new Date();
+            for (let i = 1; i <= daysInMonth; i++) {
+                const cellDate = new Date(year, month, i);
+                const isToday = cellDate.toDateString() === today.toDateString();
+                
+                const cell = createCell(i, false, isToday);
+                
+                // Add Events
+                if (activeProgram) {
+                    const events = getEventsForDate(cellDate);
+                    events.forEach(event => {
+                        const pill = createEventPill(event, cellDate);
+                        cell.appendChild(pill);
+                    });
+                }
+
+                grid.appendChild(cell);
+            }
+
+            // Next Month Padding
+            const totalCells = startDayIndex + daysInMonth;
+            const remaining = 42 - totalCells; // 6 rows of 7
+            if (remaining < 7) { // Only add if needed to fill grid nicely
+                 for (let i = 1; i <= remaining; i++) {
+                    const cell = createCell(i, true);
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        function createCell(day, isOtherMonth, isToday) {
+            const div = document.createElement('div');
+            div.className = `day-cell ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''}`;
+            
+            const number = document.createElement('div');
+            number.className = 'day-number';
+            number.textContent = day;
+            
+            div.appendChild(number);
+            return div;
+        }
+
+        // Logic to map workouts to dates
+        function getEventsForDate(date) {
+            if (!activeProgram) return [];
+
+            const startDate = new Date(activeProgram.start_date);
+            // Reset hours for comparison
+            const compareDate = new Date(date);
+            compareDate.setHours(0,0,0,0);
+            const progStart = new Date(startDate);
+            progStart.setHours(0,0,0,0);
+
+            // Calculate day difference
+            const diffTime = compareDate - progStart;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Day 1 is start date
+
+            if (diffDays < 1) return []; // Before program start
+
+            // Find workout scheduled for this day number (assuming simple mapping for demo)
+            // In a real app, logic might be: (diffDays % 7) or specific schedule table
+            // Here we assume 'day_number' in workouts table matches the day index in the program
+            const workout = programWorkouts.find(w => w.day_number === diffDays);
+
+            if (workout) {
+                // Check status
+                const log = workoutLogs.find(l => {
+                    const logDate = new Date(l.completed_at);
+                    return logDate.toDateString() === date.toDateString() && l.workout_id === workout.id;
+                });
+
+                let status = 'planned';
+                if (log) status = 'done';
+                else if (date < new Date().setHours(0,0,0,0)) status = 'missed';
+
+                return [{ ...workout, status }];
+            }
+
+            return [];
+        }
+
+        function createEventPill(event, date) {
+            const div = document.createElement('div');
+            div.className = `event-pill event-${event.status}`;
+            
+            let icon = 'fa-circle';
+            if (event.status === 'done') icon = 'fa-check';
+            if (event.status === 'missed') icon = 'fa-xmark';
+            if (event.status === 'planned') icon = 'fa-calendar';
+
+            div.innerHTML = `<i class="fa-solid ${icon}"></i> ${event.title}`;
+            
+            div.onclick = (e) => {
+                e.stopPropagation();
+                openModal(event, date);
+            };
+
+            return div;
+        }
+
+        // Modal Logic
+        window.openModal = (event, date) => {
+            const modal = document.getElementById('workout-modal');
+            document.getElementById('modal-title').textContent = event.title;
+            document.getElementById('modal-date').textContent = date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+            
+            const body = document.getElementById('modal-body');
+            const actions = document.getElementById('modal-actions');
+            
+            if (event.status === 'done') {
+                body.innerHTML = `<p class="text-center" style="color:#00ff88"><i class="fa-solid fa-check-circle fa-3x"></i><br><br>Séance terminée ! Bravo.</p>`;
+                actions.innerHTML = `<button class="btn-secondary" onclick="closeModal()">Fermer</button>`;
+            } else if (event.status === 'missed') {
+                body.innerHTML = `<p>Cette séance est passée. Vous pouvez la rattraper aujourd'hui.</p>`;
+                actions.innerHTML = `<button class="btn-primary" onclick="logWorkout('${event.id}')">Marquer comme rattrapée</button>`;
+            } else {
+                body.innerHTML = `<p>Séance prévue. Prêt à transpirer ?</p>`;
+                actions.innerHTML = `<button class="btn-primary" onclick="window.location.href='my-program.html'">Aller au programme</button>`;
+            }
+
+            modal.style.display = 'flex';
+        };
+
+        window.closeModal = () => {
+            document.getElementById('workout-modal').style.display = 'none';
+        };
+
+        window.logWorkout = async (workoutId) => {
+            try {
+                const { error } = await supabase
+                    .from('workout_logs')
+                    .insert([{
+                        user_program_id: activeProgram.id,
+                        workout_id: workoutId,
+                        completed_at: new Date().toISOString()
+                    }]);
+
+                if (error) throw error;
+
+                // Refresh
+                await fetchData();
+                renderCalendar();
+                closeModal();
+
+            } catch (error) {
+                console.error('Erreur log:', error);
+                alert("Erreur lors de l'enregistrement.");
+            }
+        };
+
+        // Expose globals
+        window.openModal = window.openModal;
+        window.closeModal = window.closeModal;
+        window.logWorkout = window.logWorkout;
+
+    </script>
+</body>
+</html>

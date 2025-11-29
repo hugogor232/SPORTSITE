@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bibliothèque Vidéo - FitCoach Pro</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            background-color: #121212;
+            padding-top: 80px;
+            min-height: 100vh;
+        }
+
+        .library-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header & Search */
+        .library-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .library-title {
+            font-family: 'Oswald', sans-serif;
+            color: white;
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .search-container {
+            position: relative;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color, #ccff00);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        /* Video Player Section */
+        .main-player-wrapper {
+            background: #1a1a1a;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 3rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            background: black;
+        }
+
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-info {
+            padding: 2rem;
+        }
+
+        .video-meta-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .video-category-badge {
+            background: var(--primary-color, #ccff00);
+            color: black;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .video-main-title {
+            color: white;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .video-description {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        /* Filters */
+        .filters-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+        }
+
+        .filter-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #ccc;
+            padding: 8px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary-color, #ccff00);
+            color: black;
+            border-color: var(--primary-color);
+        }
+
+        /* Video Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .video-card {
+            background: #1a1a1a;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+
+        .thumbnail-wrapper {
+            position: relative;
+            height: 160px;
+            overflow: hidden;
+        }
+
+        .thumbnail-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .video-card:hover .thumbnail-img {
+            transform: scale(1.05);
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-card:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .play-icon {
+            color: white;
+            font-size: 3rem;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+        }
+
+        .duration-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .card-content {
+            padding: 1rem;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            color: white;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .card-meta {
+            color: #888;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .loader {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem;
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .library-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-dumbbell"></i> FitCoach<span class="highlight">Pro</span>
+            </a>
+            
+            <button class="burger-menu" id="burger-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-links" id="nav-links">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="my-program.html">Mon Programme</a>
+                <a href="video-library.html" class="active">Vidéos</a>
+                <a href="stats.html">Statistiques</a>
+                <a href="#" id="logout-btn" class="btn-primary">Déconnexion</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="library-container">
+        
+        <!-- Header -->
+        <header class="library-header">
+            <h1 class="library-title">BIBLIOTHÈQUE <span class="text-gradient">VIDÉO</span></h1>
+            <div class="search-container">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="video-search" class="search-input" placeholder="Rechercher un exercice...">
+            </div>
+        </header>
+
+        <!-- Main Player -->
+        <div class="main-player-wrapper" id="player-section" style="display: none;">
+            <div class="video-container">
+                <video id="main-video" controls poster="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80">
+                    <source src="" type="video/mp4">
+                    Votre navigateur ne supporte pas la lecture vidéo.
+                </video>
+            </div>
+            <div class="video-info">
+                <div class="video-meta-top">
+                    <span id="current-category" class="video-category-badge">CARDIO</span>
+                    <button class="btn-outline btn-sm" onclick="closePlayer()"><i class="fa-solid fa-xmark"></i> Fermer</button>
+                </div>
+                <h2 id="current-title" class="video-main-title">Titre de la vidéo</h2>
+                <p id="current-desc" class="video-description">Description de l'exercice et conseils techniques.</p>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-bar">
+            <button class="filter-btn active" data-category="all">Tout</button>
+            <button class="filter-btn" data-category="musculation">Musculation</button>
+            <button class="filter-btn" data-category="cardio">Cardio</button>
+            <button class="filter-btn" data-category="yoga">Yoga & Mobilité</button>
+            <button class="filter-btn" data-category="hiit">HIIT</button>
+        </div>
+
+        <!-- Grid -->
+        <div id="video-grid" class="video-grid">
+            <div class="loader">
+                <i class="fa-solid fa-circle-notch fa-spin fa-3x"></i>
+                <p style="margin-top: 1rem; color: white;">Chargement des vidéos...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+
+    <!-- Supabase Logic -->
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+
+        // State
+        let allVideos = [];
+        let currentFilter = 'all';
+
+        // Elements
+        const grid = document.getElementById('video-grid');
+        const playerSection = document.getElementById('player-section');
+        const mainVideo = document.getElementById('main-video');
+        const currentTitle = document.getElementById('current-title');
+        const currentDesc = document.getElementById('current-desc');
+        const currentCat = document.getElementById('current-category');
+        const searchInput = document.getElementById('video-search');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        // Init
+        document.addEventListener('DOMContentLoaded', async () => {
+            const session = await checkSession();
+            if (session) {
+                await fetchVideos();
+                setupFilters();
+            }
+
+            // Logout
+            document.getElementById('logout-btn').addEventListener('click', async (e) => {
+                e.preventDefault();
+                await supabase.auth.signOut();
+                window.location.href = 'index.html';
+            });
+        });
+
+        // Auth Check
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return null;
+            }
+            return session;
+        }
+
+        // Fetch Videos
+        async function fetchVideos() {
+            try {
+                // Supposons une table 'exercise_videos'
+                // Structure: id, title, description, storage_path, category, thumbnail_url, duration
+                const { data, error } = await supabase
+                    .from('exercise_videos')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (data && data.length > 0) {
+                    allVideos = data;
+                } else {
+                    // Fallback Mock Data si DB vide pour la démo
+                    allVideos = getMockVideos();
+                }
+
+                renderVideos(allVideos);
+
+            } catch (error) {
+                console.error('Erreur chargement vidéos:', error);
+                allVideos = getMockVideos(); // Fallback
+                renderVideos(allVideos);
+            }
+        }
+
+        // Render Grid
+        function renderVideos(videos) {
+            grid.innerHTML = '';
+
+            if (videos.length === 0) {
+                grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#888;">Aucune vidéo trouvée.</p>';
+                return;
+            }
+
+            videos.forEach(video => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.onclick = () => playVideo(video);
+
+                const thumb = video.thumbnail_url || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';
+
+                card.innerHTML = `
+                    <div class="thumbnail-wrapper">
+                        <img src="${thumb}" alt="${video.title}" class="thumbnail-img">
+                        <div class="play-overlay">
+                            <i class="fa-solid fa-circle-play play-icon"></i>
+                        </div>
+                        <span class="duration-badge">${video.duration || '05:00'}</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${video.title}</h3>
+                        <div class="card-meta">
+                            <span>${video.category}</span>
+                            <span><i class="fa-solid fa-eye"></i> Premium</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Play Video Logic (Signed URL)
+        async function playVideo(video) {
+            try {
+                // Scroll to player
+                playerSection.style.display = 'block';
+                playerSection.scrollIntoView({ behavior: 'smooth' });
+
+                // Update Info
+                currentTitle.textContent = video.title;
+                currentDesc.textContent = video.description || "Pas de description disponible.";
+                currentCat.textContent = video.category;
+                mainVideo.poster = video.thumbnail_url || '';
+
+                // Generate Signed URL from Supabase Storage
+                // Bucket: 'videos' (supposé privé)
+                let videoUrl = video.video_url; // Si URL publique directe
+
+                if (video.storage_path) {
+                    const { data, error } = await supabase
+                        .storage
+                        .from('videos')
+                        .createSignedUrl(video.storage_path, 3600); // Valide 1h
+
+                    if (error) throw error;
+                    videoUrl = data.signedUrl;
+                }
+
+                // Si pas de storage_path (mock), on utilise une vidéo de démo
+                if (!videoUrl) {
+                    videoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"; // Demo
+                }
+
+                mainVideo.src = videoUrl;
+                mainVideo.play();
+
+            } catch (error) {
+                console.error('Erreur lecture vidéo:', error);
+                alert("Impossible de charger la vidéo sécurisée.");
+            }
+        }
+
+        // Close Player
+        window.closePlayer = () => {
+            mainVideo.pause();
+            playerSection.style.display = 'none';
+        };
+
+        // Filters & Search
+        function setupFilters() {
+            // Categories
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const category = btn.getAttribute('data-category');
+                    currentFilter = category;
+                    applyFilters();
+                });
+            });
+
+            // Search
+            searchInput.addEventListener('input', (e) => {
+                applyFilters();
+            });
+        }
+
+        function applyFilters() {
+            const term = searchInput.value.toLowerCase();
+            
+            const filtered = allVideos.filter(video => {
+                const matchesCat = currentFilter === 'all' || video.category.toLowerCase() === currentFilter;
+                const matchesSearch = video.title.toLowerCase().includes(term) || 
+                                      (video.description && video.description.toLowerCase().includes(term));
+                return matchesCat && matchesSearch;
+            });
+
+            renderVideos(filtered);
+        }
+
+        // Mock Data
+        function getMockVideos() {
+            return [
+                {
+                    id: 1,
+                    title: "Burpees Explosifs",
+                    description: "Technique correcte pour maximiser la dépense calorique sans se blesser.",
+                    category: "Cardio",
+                    duration: "02:30",
+                    thumbnail_url: "https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                    storage_path: "demos/burpees.mp4"
+                },
+                {
+                    id: 2,
+                    title: "Squat Technique",
+                    description: "Placement du dos, des genoux et respiration pour un squat parfait.",
+                    category: "Musculation",
+                    duration: "05:00",
+                    thumbnail_url: "https://images.unsplash.com/photo-1574680096141-63318b48f52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                    storage_path: "demos/squat.mp4"
+                },
+                {
+                    id: 3,
+                    title: "Salutation au Soleil",
+                    description: "Enchaînement de yoga pour réveiller le corps en douceur.",
+                    category: "Yoga",
+                    duration: "10:00",
+                    thumbnail_url: "https://images.unsplash.com/photo-1544367563-12123d8965cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                    storage_path: "demos/yoga1.mp4"
+                },
+                {
+                    id: 4,
+                    title: "HIIT Tabata 4min",
+                    description: "4 minutes intenses pour brûler un max de graisses.",
+                    category: "HIIT",
+                    duration: "04:00",
+                    thumbnail_url: "https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                    storage_path: "demos/tabata.mp4"
+                }
+            ];
+        }
+
+        // Expose closePlayer globally
+        window.closePlayer = window.closePlayer;
+
+    </script>
+</body>
+</html>

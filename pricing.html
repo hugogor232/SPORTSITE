@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarifs & Abonnements - FitCoach Pro</title>
+    <meta name="description" content="Choisissez le plan adapté à vos objectifs. Coaching personnalisé, programmes illimités et suivi nutritionnel.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Styles spécifiques Pricing */
+        .pricing-header {
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(20,20,20,0.8)), url('https://images.unsplash.com/photo-1534258936925-c48947387603?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: -50px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .pricing-card {
+            background: #1a1a1a;
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .pricing-card.popular {
+            background: linear-gradient(145deg, #222, #1a1a1a);
+            border: 2px solid var(--primary-color, #ccff00);
+            transform: scale(1.05);
+            z-index: 11;
+            box-shadow: 0 10px 30px rgba(204, 255, 0, 0.15);
+        }
+
+        .pricing-card.popular:hover {
+            transform: scale(1.05) translateY(-10px);
+            box-shadow: 0 20px 50px rgba(204, 255, 0, 0.25);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-color, #ccff00);
+            color: black;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            color: #888;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .plan-price {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: white;
+            font-family: 'Oswald', sans-serif;
+            margin-bottom: 2rem;
+        }
+
+        .plan-price span {
+            font-size: 1rem;
+            color: #666;
+            font-weight: 400;
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2.5rem;
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        .features-list li {
+            margin-bottom: 1rem;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+        }
+
+        .features-list li i {
+            margin-right: 10px;
+            color: var(--primary-color, #ccff00);
+        }
+
+        .features-list li.disabled {
+            color: #555;
+            text-decoration: line-through;
+        }
+
+        .features-list li.disabled i {
+            color: #555;
+        }
+
+        .faq-section {
+            padding: 80px 0;
+            background-color: #121212;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .faq-item h4 {
+            color: white;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .faq-item p {
+            color: #999;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-dumbbell"></i> FitCoach<span class="highlight">Pro</span>
+            </a>
+            
+            <button class="burger-menu" id="burger-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-links" id="nav-links">
+                <a href="index.html">Accueil</a>
+                <a href="programs.html">Programmes</a>
+                <a href="pricing.html" class="active">Tarifs</a>
+                <a href="login.html" id="auth-action-btn" class="btn-primary">Connexion</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="pricing-header">
+        <div class="container">
+            <h1 class="animate-up">INVESTISSEZ EN <span class="text-gradient">VOUS</span></h1>
+            <p class="animate-up delay-1">Des solutions flexibles pour tous les budgets. Annulez à tout moment.</p>
+        </div>
+    </header>
+
+    <!-- Pricing Grid -->
+    <section class="section-padding bg-dark" style="padding-top: 0;">
+        <div class="container">
+            <div class="pricing-grid">
+                
+                <!-- Plan Gratuit -->
+                <div class="pricing-card">
+                    <h3 class="plan-name">Starter</h3>
+                    <div class="plan-price">0€<span>/mois</span></div>
+                    <ul class="features-list">
+                        <li><i class="fa-solid fa-check"></i> Accès à 3 programmes de base</li>
+                        <li><i class="fa-solid fa-check"></i> Suivi de progression simple</li>
+                        <li><i class="fa-solid fa-check"></i> Accès à la communauté</li>
+                        <li class="disabled"><i class="fa-solid fa-xmark"></i> Coach IA Personnel</li>
+                        <li class="disabled"><i class="fa-solid fa-xmark"></i> Plans nutritionnels</li>
+                        <li class="disabled"><i class="fa-solid fa-xmark"></i> Chat direct avec coach</li>
+                    </ul>
+                    <button class="btn-secondary w-100 plan-btn" data-plan="free">COMMENCER</button>
+                </div>
+
+                <!-- Plan Pro -->
+                <div class="pricing-card popular">
+                    <div class="popular-badge">Le plus populaire</div>
+                    <h3 class="plan-name">Pro</h3>
+                    <div class="plan-price">29€<span>/mois</span></div>
+                    <ul class="features-list">
+                        <li><i class="fa-solid fa-check"></i> <strong>Tous les programmes illimités</strong></li>
+                        <li><i class="fa-solid fa-check"></i> Statistiques avancées</li>
+                        <li><i class="fa-solid fa-check"></i> Coach IA 24/7</li>
+                        <li><i class="fa-solid fa-check"></i> Plans nutritionnels générés</li>
+                        <li><i class="fa-solid fa-check"></i> Vidéos HD exclusives</li>
+                        <li class="disabled"><i class="fa-solid fa-xmark"></i> Chat direct avec coach humain</li>
+                    </ul>
+                    <button class="btn-primary w-100 plan-btn" data-plan="pro">CHOISIR PRO</button>
+                </div>
+
+                <!-- Plan Elite -->
+                <div class="pricing-card">
+                    <h3 class="plan-name">Elite</h3>
+                    <div class="plan-price">99€<span>/mois</span></div>
+                    <ul class="features-list">
+                        <li><i class="fa-solid fa-check"></i> Tout le contenu Pro</li>
+                        <li><i class="fa-solid fa-check"></i> <strong>Coach Humain Dédié</strong></li>
+                        <li><i class="fa-solid fa-check"></i> Chat illimité avec le coach</li>
+                        <li><i class="fa-solid fa-check"></i> Analyse vidéo de vos mouvements</li>
+                        <li><i class="fa-solid fa-check"></i> Ajustement hebdomadaire du plan</li>
+                        <li><i class="fa-solid fa-check"></i> Support prioritaire</li>
+                    </ul>
+                    <button class="btn-secondary w-100 plan-btn" data-plan="elite">DEVENIR ELITE</button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>QUESTIONS <span class="highlight">FRÉQUENTES</span></h2>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h4>Puis-je changer de plan à tout moment ?</h4>
+                    <p>Oui, vous pouvez passer du plan Starter au Pro ou Elite instantanément depuis votre dashboard. Le prorata sera calculé automatiquement.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Comment fonctionne l'essai gratuit ?</h4>
+                    <p>Le plan Starter est gratuit à vie. Pour les plans Pro et Elite, nous offrons une garantie satisfait ou remboursé de 14 jours.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Les coachs sont-ils certifiés ?</h4>
+                    <p>Absolument. Tous nos coachs Elite possèdent des certifications d'État et ont été rigoureusement sélectionnés par notre équipe.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Puis-je annuler mon abonnement ?</h4>
+                    <p>L'annulation se fait en un clic depuis votre espace membre. L'accès reste actif jusqu'à la fin de la période facturée.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>FitCoach<span class="highlight">Pro</span></h3>
+                <p>La plateforme ultime pour votre transformation physique.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="programs.html">Programmes</a></li>
+                    <li><a href="pricing.html">Tarifs</a></li>
+                    <li><a href="login.html">Connexion</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Légal</h4>
+                <ul>
+                    <li><a href="#">CGU</a></li>
+                    <li><a href="#">Confidentialité</a></li>
+                    <li><a href="#">Mentions Légales</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom text-center">
+            <p>&copy; 2023 FitCoach Pro. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+
+    <!-- Supabase Logic -->
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+
+        // État global
+        let userSession = null;
+        let userProfile = null;
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initAuth();
+            setupButtons();
+        });
+
+        // Gestion de l'authentification et récupération du profil
+        async function initAuth() {
+            const { data: { session } } = await supabase.auth.getSession();
+            userSession = session;
+
+            const authBtn = document.getElementById('auth-action-btn');
+
+            if (userSession) {
+                // UI Nav
+                authBtn.textContent = 'Mon Dashboard';
+                authBtn.href = 'dashboard.html';
+                authBtn.classList.remove('btn-primary');
+                authBtn.classList.add('btn-secondary');
+
+                // Récupération du profil pour connaître le plan actuel
+                try {
+                    const { data, error } = await supabase
+                        .from('profiles')
+                        .select('subscription_plan')
+                        .eq('id', userSession.user.id)
+                        .single();
+                    
+                    if (data) {
+                        userProfile = data;
+                        updatePricingUI(data.subscription_plan);
+                    }
+                } catch (err) {
+                    console.error("Erreur récupération profil", err);
+                }
+            } else {
+                // UI Nav
+                authBtn.textContent = 'Connexion';
+                authBtn.href = 'login.html';
+            }
+        }
+
+        // Mise à jour de l'interface selon le plan actuel
+        function updatePricingUI(currentPlan) {
+            const buttons = document.querySelectorAll('.plan-btn');
+            
+            buttons.forEach(btn => {
+                const planType = btn.getAttribute('data-plan');
+                
+                if (planType === currentPlan) {
+                    btn.textContent = "PLAN ACTUEL";
+                    btn.disabled = true;
+                    btn.classList.remove('btn-primary', 'btn-secondary');
+                    btn.classList.add('btn-outline'); // Style désactivé/outline
+                    btn.style.opacity = "0.5";
+                    btn.style.cursor = "default";
+                } else {
+                    // Si l'utilisateur a déjà un plan, les autres boutons deviennent "Changer pour..."
+                    if (currentPlan !== 'free') {
+                        btn.textContent = "CHANGER D'OFFRE";
+                    }
+                }
+            });
+        }
+
+        // Gestion des clics sur les boutons
+        function setupButtons() {
+            const buttons = document.querySelectorAll('.plan-btn');
+            
+            buttons.forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const plan = e.target.getAttribute('data-plan');
+                    
+                    if (!userSession) {
+                        // Non connecté -> Redirection vers inscription avec le plan en paramètre
+                        window.location.href = `register.html?plan=${plan}`;
+                    } else {
+                        // Connecté -> Logique de paiement (Simulation)
+                        if (plan === 'free') {
+                            // Downgrade vers gratuit (simple update DB)
+                            alert("Pour passer au plan gratuit, veuillez contacter le support ou gérer votre abonnement dans le dashboard.");
+                            window.location.href = 'dashboard.html';
+                        } else {
+                            // Upgrade -> Redirection vers Stripe (Simulé ici)
+                            // Dans une vraie app : appel à une Edge Function Supabase pour créer une session Stripe Checkout
+                            console.log(`Initiating checkout for ${plan}`);
+                            
+                            const btnText = e.target.textContent;
+                            e.target.textContent = "Chargement...";
+                            
+                            // Simulation délai réseau
+                            setTimeout(() => {
+                                // Redirection vers une page de succès ou dashboard
+                                // Ici on simule que le paiement est géré
+                                window.location.href = `dashboard.html?upgrade=${plan}`;
+                            }, 1000);
+                        }
+                    }
+                });
+            });
+        }
+
+        // Écouteur Auth
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_OUT') {
+                window.location.reload();
+            }
+        });
+
+    </script>
+</body>
+</html>

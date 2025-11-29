@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - FitCoach Pro</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            background-color: #121212;
+            padding-top: 80px;
+            min-height: 100vh;
+        }
+
+        .profile-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .profile-header {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 1rem;
+        }
+
+        .profile-title {
+            font-family: 'Oswald', sans-serif;
+            color: white;
+            font-size: 2rem;
+            text-transform: uppercase;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 3rem;
+        }
+
+        /* Avatar Section */
+        .avatar-section {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            height: fit-content;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--primary-color, #ccff00);
+            background: #000;
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            cursor: pointer;
+        }
+
+        .avatar-wrapper:hover .avatar-overlay {
+            opacity: 1;
+        }
+
+        .avatar-overlay i {
+            color: white;
+            font-size: 2rem;
+        }
+
+        .user-email {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            word-break: break-all;
+        }
+
+        .role-badge {
+            background: rgba(204, 255, 0, 0.1);
+            color: var(--primary-color);
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* Form Section */
+        .form-section {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: white;
+            margin-bottom: 0.5rem;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color, #ccff00);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .form-control:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn-save {
+            background: var(--primary-color, #ccff00);
+            color: black;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(204, 255, 0, 0.3);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1a1a1a;
+            border: 1px solid var(--primary-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            border-color: #ff4444;
+        }
+
+        .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-dumbbell"></i> FitCoach<span class="highlight">Pro</span>
+            </a>
+            
+            <button class="burger-menu" id="burger-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-links" id="nav-links">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="my-program.html">Mon Programme</a>
+                <a href="stats.html">Statistiques</a>
+                <a href="messages.html">Coach Chat</a>
+                <a href="profile.html" class="active">Mon Profil</a>
+                <a href="#" id="logout-btn" class="btn-primary">Déconnexion</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <header class="profile-header">
+            <h1 class="profile-title">MON <span class="text-gradient">PROFIL</span></h1>
+        </header>
+
+        <div id="loader" class="loader">
+            <i class="fa-solid fa-circle-notch fa-spin fa-3x"></i>
+        </div>
+
+        <div id="profile-content" class="profile-grid" style="display: none;">
+            
+            <!-- Avatar Column -->
+            <div class="avatar-section">
+                <div class="avatar-wrapper" onclick="document.getElementById('avatar-upload').click()">
+                    <img id="avatar-preview" src="https://via.placeholder.com/150" alt="Avatar" class="avatar-img">
+                    <div class="avatar-overlay">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+                </div>
+                <!-- Hidden File Input -->
+                <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
+                
+                <h3 id="display-name" style="color:white; margin-bottom:0.5rem;">Utilisateur</h3>
+                <p id="display-email" class="user-email">email@example.com</p>
+                <span id="display-role" class="role-badge">Membre</span>
+                
+                <div style="margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+                    <p style="color:#666; font-size:0.8rem;">Membre depuis le</p>
+                    <p id="created-at" style="color:#ccc;">-</p>
+                </div>
+            </div>
+
+            <!-- Form Column -->
+            <div class="form-section">
+                <form id="profile-form">
+                    <h3 style="color:white; font-family:'Oswald'; margin-bottom:1.5rem;">INFORMATIONS PERSONNELLES</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Nom Complet</label>
+                        <input type="text" id="full-name" class="form-control" placeholder="Votre nom">
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Taille (cm)</label>
+                            <input type="number" id="height" class="form-control" placeholder="180">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Poids (kg)</label>
+                            <input type="number" id="weight" class="form-control" placeholder="75">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Objectif Principal</label>
+                        <select id="goal" class="form-control">
+                            <option value="weight_loss">Perte de poids</option>
+                            <option value="muscle_gain">Prise de masse</option>
+                            <option value="endurance">Endurance / Cardio</option>
+                            <option value="flexibility">Souplesse / Yoga</option>
+                            <option value="maintenance">Maintien</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Bio / Notes pour le coach</label>
+                        <textarea id="bio" class="form-control" placeholder="Parlez-nous de vos blessures, disponibilités ou préférences..."></textarea>
+                    </div>
+
+                    <button type="submit" id="save-btn" class="btn-save">
+                        ENREGISTRER LES MODIFICATIONS
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fa-solid fa-check-circle"></i>
+        <span id="toast-message">Modifications enregistrées</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+
+    <!-- Supabase Logic -->
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+
+        // Variables
+        let currentUser = null;
+        const loader = document.getElementById('loader');
+        const content = document.getElementById('profile-content');
+        const avatarInput = document.getElementById('avatar-upload');
+        const avatarPreview = document.getElementById('avatar-preview');
+        const profileForm = document.getElementById('profile-form');
+        const saveBtn = document.getElementById('save-btn');
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', async () => {
+            const session = await checkSession();
+            if (session) {
+                currentUser = session.user;
+                await loadProfile();
+            }
+
+            // Logout
+            document.getElementById('logout-btn').addEventListener('click', async (e) => {
+                e.preventDefault();
+                await supabase.auth.signOut();
+                window.location.href = 'index.html';
+            });
+        });
+
+        // Auth Check
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return null;
+            }
+            return session;
+        }
+
+        // Load Profile Data
+        async function loadProfile() {
+            try {
+                const { data: profile, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                if (error) throw error;
+
+                // Populate UI
+                document.getElementById('display-email').textContent = currentUser.email;
+                document.getElementById('created-at').textContent = new Date(currentUser.created_at).toLocaleDateString('fr-FR');
+                
+                if (profile) {
+                    document.getElementById('full-name').value = profile.name || '';
+                    document.getElementById('display-name').textContent = profile.name || 'Utilisateur';
+                    document.getElementById('height').value = profile.height || '';
+                    document.getElementById('weight').value = profile.weight || '';
+                    document.getElementById('bio').value = profile.bio || '';
+                    document.getElementById('display-role').textContent = profile.role === 'coach' ? 'Coach' : 'Athlète';
+                    
+                    if (profile.goal) {
+                        document.getElementById('goal').value = profile.goal;
+                    }
+
+                    if (profile.avatar_url) {
+                        avatarPreview.src = profile.avatar_url;
+                    } else {
+                        avatarPreview.src = `https://ui-avatars.com/api/?name=${profile.name || 'User'}&background=ccff00&color=000`;
+                    }
+                }
+
+                loader.style.display = 'none';
+                content.style.display = 'grid';
+
+            } catch (error) {
+                console.error('Erreur chargement profil:', error);
+                showToast('Erreur lors du chargement du profil', true);
+            }
+        }
+
+        // Handle Avatar Upload
+        avatarInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Preview immediately
+            avatarPreview.src = URL.createObjectURL(file);
+
+            try {
+                showToast('Téléchargement de l\'image...', false);
+                
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${currentUser.id}/${Date.now()}.${fileExt}`;
+                const filePath = `${fileName}`;
+
+                // 1. Upload to Storage
+                const { error: uploadError } = await supabase.storage
+                    .from('avatars')
+                    .upload(filePath, file);
+
+                if (uploadError) throw uploadError;
+
+                // 2. Get Public URL
+                const { data: { publicUrl } } = supabase.storage
+                    .from('avatars')
+                    .getPublicUrl(filePath);
+
+                // 3. Update Profile
+                const { error: updateError } = await supabase
+                    .from('profiles')
+                    .update({ avatar_url: publicUrl })
+                    .eq('id', currentUser.id);
+
+                if (updateError) throw updateError;
+
+                showToast('Photo de profil mise à jour !');
+
+            } catch (error) {
+                console.error('Erreur upload:', error);
+                showToast('Erreur lors de l\'upload', true);
+            }
+        });
+
+        // Handle Form Submit
+        profileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Enregistrement...';
+
+            const updates = {
+                id: currentUser.id,
+                name: document.getElementById('full-name').value,
+                height: document.getElementById('height').value || null,
+                weight: document.getElementById('weight').value || null,
+                goal: document.getElementById('goal').value,
+                bio: document.getElementById('bio').value,
+                updated_at: new Date().toISOString()
+            };
+
+            try {
+                const { error } = await supabase
+                    .from('profiles')
+                    .upsert(updates);
+
+                if (error) throw error;
+
+                // Update UI display name immediately
+                document.getElementById('display-name').textContent = updates.name;
+                
+                showToast('Profil mis à jour avec succès !');
+
+            } catch (error) {
+                console.error('Erreur update:', error);
+                showToast('Erreur lors de la mise à jour', true);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'ENREGISTRER LES MODIFICATIONS';
+            }
+        });
+
+        // Toast Helper
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const msgSpan = document.getElementById('toast-message');
+            const icon = toast.querySelector('i');
+
+            msgSpan.textContent = message;
+            
+            if (isError) {
+                toast.classList.add('error');
+                icon.className = 'fa-solid fa-circle-exclamation';
+            } else {
+                toast.classList.remove('error');
+                icon.className = 'fa-solid fa-check-circle';
+            }
+
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+    </script>
+</body>
+</html>
